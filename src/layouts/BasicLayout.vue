@@ -30,8 +30,14 @@ const mockMenus = [
     title: "分类管理",
     children: [
       {
-        url: "/category",
-        title: "分类查询"
+        url: "/category/1",
+        title: "分类查询",
+        children: [
+          {
+            url: "/category/2",
+            title: "分类子分类"
+          }
+        ]
       }
     ]
   },
