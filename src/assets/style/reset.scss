@@ -1,0 +1,81 @@
+/*
+ * @Author: wangxq02
+ * @Date: 2020-11-11 14:58:56
+ * @LastEditTime: 2020-11-13 13:30:45
+ * @LastEditors: Please set LastEditors
+ * @Description: css reset
+ * @FilePath: /rcceye-h5/src/assets/styles/reset.scss
+ */
+:root {
+  --color-primary: #2196f3;
+  --color-site-bg: #f4f4f4;
+  --color-nav-menu: #666;
+  --color-text: #444;
+  --color-h1: #3a3a3a;
+  --color-h2: #3a3a3a;
+  --color-h3: #333;
+  --color-h4: #444;
+  --color-h5: #555;
+  --color-h6: #666;
+  --color-p: #444;
+  --color-meta: #888;
+}
+
+html {
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, Menlo, Monaco, monospace, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url("../bg.png");
+  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANCSURBVFiF7dVNaF1FFMDx/5mZe997aZJGWpMgiLioNOlCBCO2RdqoVAxYcfHQ1IJ10W5EFKnFXcleRBREN9qCbUIDVfwKBbURBBGKBKxF0qKmJHHRJBby8d69d2aOi26sNovyXgJCznYGzm+G8yFHLmhy5Tc6E0ts3878mV5y1jHMH9N0S+SVkDN0/SJ9A+9SWldAsUxnUqbPpjynyhuhm90DY+uHMChlBAHaUB6LgdezBR699wTldQGIYDWiKswDU2LY4VJe27aJfQ9+QcuaA6wgxmBsiV9VeD8q51DuFzjascRA/yitawoQRWMkEQhO+ckoH8TI5zHQI3DMBfYPnKJ9zQDe4BUShTS3rBTdTFjPO0b5BLhHhGPB8Ez/p3SsCcBZMjypRlLjKc7vxZ8rcTGHtwRGVemKwlFXp7p/mK1NBxDJNJIQKSWOTATRKmF8kMmizpsinEK4QwyvrgjPPj5MV1MBUlBXxWmgnCd4VRRAIY5PcbVY5G0RToqhYiwviWFw3wh3NQ1QlKgZMLGg7AriPw/1OHF8htkgvKeBE8birOOwKM8/McLdQ0OYhgGtHh8UNOKiRQTk34hvqsy6RT70no+wREk4hOHgeC+d0iDCZAEjEARiKrhV7unYYWbqkZOhYATojMohE3lg7x7ShgBBSQQKBe9zUuVGDfxHoCgrLEpkLioFUDZQufPazT922wAvpGrJgEJ19fm/6wcqm9rZg6GqNwCf+cilHVWyhgBiKRlLhiHD3HoLCkj7Ve4TeFGEHo18G5SPp+f4/Tg3F+7thrNCipCLIeLZMjBG+8IV2NxBmK+RXzhC8eQYbQF2A70a+QXldHmOicsvN/Z6AKeCU/BEulQ4WCzzSFsXNsLs1oQfnx5msnB0itKnAUfku9Qx8VUTkgM4C7WYMQVsV9glnoeBBMFFYammfI1nEss2Iyyp4VIrLDQjOYDLa0wnCafV8DOWClCXQAL0IjyE5SkRxDgSUb7P68ycOUBoFkBQlZ2jlFtqtIQEoYKvLRMrBcaW6DHwgknZaRL+DBlnc8/Z84PMNQ2gesu2B6B/HGf/YjOLbCmVQALXvjzA9dVmRdMB6xENL5MNwAZgA/C/B/wNXhNae2xh8dMAAAAASUVORK5CYII=),default!important;
+}
+
+ul, li {
+  list-style: none;
+}
+
+i {
+  font-size: 14px !important;
+}
+
+img {
+  border-radius: 4px;
+}
+
+a {
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAPRSURBVFiF7ZZNa11VFIafd59z7kebD/NVQhtIKS21VYsS6MiUSNsEaxWLpIIgCIL+CcF26k9woELRlGQgtNbixAYshmKDipIOTEOpVWraJDdfvefee85eDm4iTUggN00m0jXaB9Y++9nv2vvdS2bG43Ee3I8XyJdTIiAefo+SwcqkLQw9DvDKMGHuPh0Vx4vO0+6N22HK7w1ZJgf7SbcDIFzx9YDWBN7H87rBDjmmUsdXc/AlML0dAG55IKHA0wC8LNgjmJHRKegupTRIaFsBAAKPA/KIeS9+MFgwT0M2WKXUFsZaPzaMRFAAUgnnK9uze1ilwH8AYOZITcig3kfs7b5A+9khMmJrYVYoUAYCMFXJUjNC4JDznMsEXJ81rvQOMHksZfbRIR6OdpE86RVdr7beUooSD03kzNjjxDvecxKxkAkYyY7z9fFxpvuMYnaOqcsfUNwMjMD03CBR8wKNUR0vOM8nZuQwPgJ2S2RNSMabwG4gh0gxJkyYPOMOLjaGjAz2U6xZgVe/JRPP8azL0aeUYwYdgnGJexXjejbAW0hoFW74hL04Dss4A+yTkSL2eyNcrHBb4q5ZbSqEySwtzngXOI0QnjHgknLcHT7DlFXPhPqHKNw1fqsL+FnGnFKcF7EZHzrHkWJKa/8g96A2xwxDka/AQSAj4/NEXKWOO21FZpZramD0U5aodN3kj10TfEYMPk+HE2+Z0eg8OyZmcDUDeIdIiICiAn7JlLj13WkW10pekrdCFw8kdPwiTeYpS6CQYF9T7VfUlUpgwiO8h3I53fgOXIrJVfMFwcL9TQC4CJOqUvvKmsa0/uQIwy8Bi6BYvxmAtGq9CJzIzLduHCIp4kzVfBM+P1+7DzgiEqs+tc5Ee31CZiMTe64RuAwNTjRjJImnUJyuvWdwLiYW3JHhcLyULdH5xjfs0Pm1lRDo1FWy7h86DboxGhF/ZQMKw+dqBwinmlh4ZpFRjD4ZJ1Jw5UWunDzA2IkB5tI8pfqQMn9DspOwN6DRO/YLXsPoNRGb+L6UUKjVhADC0VHiU4e5WU4YQLwN9HjjKAG3MCaimD+LYpI6UhwtEke856igRVDwxpU04VJblplaF4elnvDsEMFsTEsS8rwTvQbdQKOseqolbNkRDQLgEXDDhVy2hF8r7Uxe6yHZNABUa9vzBdkoR7M3Ok0cdNApo8NEmwlzxqx57uD4yVUYm89xf6Sf+EmeZK1uywXq+pRw107yqSdHRNZ7IgAiEhcTz+eYHxmjZB/jN7vwugBrJi01pJs5ZFsCsJ1Rk/U+BXgK8L8E+BehbK1QiZJKywAAAABJRU5ErkJggg==), pointer !important;
+
+  &:hover {
+    color: #ff5722 !important;
+  }
+}
+
+p {
+  color: var(--color-p);
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font: 11px SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
+  line-height: 10px;
+  vertical-align: middle;
+  background-color: #fafbfc;
+  border: 1px solid #d1d5da;
+  border-radius: 6px;
+  box-shadow: inset 0 -1px 0 #d1d5da;
+}
+
+
+.el-menu{
+  border-right-width: 0;
+}
+
+.el-menu-item.is-active {
+  background-color: #409eff !important;
+}
