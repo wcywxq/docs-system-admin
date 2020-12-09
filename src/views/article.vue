@@ -9,7 +9,7 @@
 <template>
   <div class="article">
     <el-card shadow="hover">
-      文章 {{ id }}
+      文章 {{ id }} : {{ id }}
       <code>
         {{ data.content }}
       </code>
