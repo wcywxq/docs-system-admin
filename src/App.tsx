@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { renderRoutes } from "react-router-config";
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import routes from "./router";
 
 const App: FC = () => {
