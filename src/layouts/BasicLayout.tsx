@@ -19,7 +19,7 @@ const BasicLayout: FC<RouteConfigComponentProps> = (props) => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider collapsible collapsed={collapse} onCollapse={onCollapse}>
-        <div style={{ height: "32px", margin: "16px", background: "rgba(255, 255, 255, 0.3)" }}>notice</div>
+        <div className="h-8 m-4 text-center text-white">notice admin</div>
         <Menu theme="dark" mode="inline">
           {route?.routes?.map((item: any) =>
             item.routes ? (
@@ -31,7 +31,7 @@ const BasicLayout: FC<RouteConfigComponentProps> = (props) => {
                 ))}
               </SubMenu>
             ) : (
-              <Menu.Item key={item.path as string}>
+              <Menu.Item key={item.path as string} icon={<MailOutlined />}>
                 <Link to={item.path as string}>{item.title}</Link>
               </Menu.Item>
             )
