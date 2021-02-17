@@ -1,5 +1,5 @@
-import { FC, useMemo, useState } from "react";
-import { matchRoutes, RouteConfigComponentProps } from "react-router-config";
+import { FC, useEffect, useMemo, useState } from "react";
+import { matchRoutes, RouteConfig, RouteConfigComponentProps } from "react-router-config";
 import { Layout, Breadcrumb, Menu } from "antd";
 import { MailOutlined } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
@@ -15,13 +15,37 @@ const BasicLayout: FC<RouteConfigComponentProps> = (props) => {
   const [collapse, setCollapse] = useState(false);
   // 当前激活的菜单的 key
   const selectedKeys = useMemo(() => [pathname], [pathname]);
-  // 默认展开的菜单
-  const defaultOpenKeys = useMemo(
-    () => (route?.routes ? matchRoutes(route?.routes, pathname).map((item) => item.match.path) : []),
-    [route, pathname]
-  );
+  // 默认匹配的路由
+  const routeMatches = useMemo(() => {
+    if (route && route.routes) {
+      const matches = matchRoutes(route.routes, pathname);
+      return matches.map((item) => item.route);
+    }
+    return [];
+  }, [pathname, route]);
+
+  // 默认打开的菜单的 key
+  const defaultOpenKeys = useMemo(() => routeMatches.map((item) => item.path as string), [routeMatches]);
 
   const onCollapse = (val: boolean) => setCollapse(val);
+
+  console.log(routeMatches);
+
+  // 面包屑子项
+  const breadcrumbItems = [
+    <Breadcrumb.Item key="home">
+      <Link to="/">首页</Link>
+    </Breadcrumb.Item>,
+  ].concat(
+    routeMatches.map((item) => {
+      if (item.path === pathname || item.routes) return <Breadcrumb.Item>{item.title}</Breadcrumb.Item>;
+      return (
+        <Breadcrumb.Item>
+          <Link to={item.path as string}>{item.title}</Link>
+        </Breadcrumb.Item>
+      );
+    })
+  );
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -31,7 +55,7 @@ const BasicLayout: FC<RouteConfigComponentProps> = (props) => {
           {route?.routes?.map((item: any) =>
             item.routes ? (
               <SubMenu key={item.path as string} icon={<MailOutlined />} title={item.title}>
-                {item.routes?.map((child: any, idx: any) => (
+                {item.routes?.map((child: any) => (
                   <Menu.Item key={child.path as string} title>
                     <Link to={child.path as string}>{child.title}</Link>
                   </Menu.Item>
@@ -46,12 +70,10 @@ const BasicLayout: FC<RouteConfigComponentProps> = (props) => {
         </Menu>
       </Sider>
       <Layout>
-        <Header>123</Header>
-        <Content style={{ margin: "0 16px" }}>
-          <Breadcrumb style={{ margin: "16px 0" }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
+        <Header className="bg-white flex items-center">
+          <Breadcrumb>{breadcrumbItems}</Breadcrumb>
+        </Header>
+        <Content className="mx-4">
           <RouteView {...props} />
         </Content>
       </Layout>
