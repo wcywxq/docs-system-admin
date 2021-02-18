@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { matchRoutes, RouteConfig, RouteConfigComponentProps } from "react-router-config";
 import { Layout, Breadcrumb, Menu } from "antd";
 import { MailOutlined } from "@ant-design/icons";
@@ -47,33 +47,39 @@ const BasicLayout: FC<RouteConfigComponentProps> = (props) => {
     })
   );
 
+  // 递归实现菜单渲染
+  const renderMenu = (arr: RouteConfig[]) => {
+    return arr.map((item) => {
+      if (item.routes) {
+        return (
+          <SubMenu key={item.path as string} icon={<MailOutlined />} title={item.title}>
+            {renderMenu(item.routes)}
+          </SubMenu>
+        );
+      }
+      return (
+        <Menu.Item key={item.path as string} icon={<MailOutlined />}>
+          <Link to={item.path as string}>{item.title}</Link>
+        </Menu.Item>
+      );
+    });
+  };
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider collapsible collapsed={collapse} onCollapse={onCollapse}>
         <div className="h-8 m-4 text-center text-white">notice admin</div>
-        <Menu theme="dark" mode="inline" defaultOpenKeys={defaultOpenKeys} selectedKeys={selectedKeys}>
-          {route?.routes?.map((item: any) =>
-            item.routes ? (
-              <SubMenu key={item.path as string} icon={<MailOutlined />} title={item.title}>
-                {item.routes?.map((child: any) => (
-                  <Menu.Item key={child.path as string} title>
-                    <Link to={child.path as string}>{child.title}</Link>
-                  </Menu.Item>
-                ))}
-              </SubMenu>
-            ) : (
-              <Menu.Item key={item.path as string} icon={<MailOutlined />}>
-                <Link to={item.path as string}>{item.title}</Link>
-              </Menu.Item>
-            )
-          )}
-        </Menu>
+        {route?.routes && (
+          <Menu theme="dark" mode="inline" defaultOpenKeys={defaultOpenKeys} selectedKeys={selectedKeys}>
+            {renderMenu(route.routes)}
+          </Menu>
+        )}
       </Sider>
       <Layout>
         <Header className="bg-white flex items-center">
           <Breadcrumb>{breadcrumbItems}</Breadcrumb>
         </Header>
-        <Content className="mx-4">
+        <Content className="m-4">
           <RouteView {...props} />
         </Content>
       </Layout>
