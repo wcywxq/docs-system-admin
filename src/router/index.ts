@@ -1,5 +1,5 @@
 import { RouteConfig } from "react-router-config";
-import BasicLayout from "../layouts/BasicLayout";
+import PageLayout from "../layouts/PageLayout";
 import RouteView from "../layouts/RouteView";
 import ArticleAdd from "../views/article/add";
 import ArticleList from "../views/article/list";
@@ -7,7 +7,7 @@ import ArticleList from "../views/article/list";
 const routes: RouteConfig[] = [
   {
     path: "/",
-    component: BasicLayout,
+    component: PageLayout,
     routes: [
       {
         path: "/article",
