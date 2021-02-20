@@ -1,7 +1,7 @@
 import { FC, useMemo, useState } from "react";
 import { matchRoutes, RouteConfig, RouteConfigComponentProps } from "react-router-config";
 import { Layout, Breadcrumb, Menu } from "antd";
-import { MailOutlined } from "@ant-design/icons";
+import { MailOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import RouteView from "./RouteView";
 import logo from "../assets/image/logo.svg";
@@ -27,10 +27,6 @@ const PageLayout: FC<RouteConfigComponentProps> = (props) => {
 
   // 默认打开的菜单的 key
   const defaultOpenKeys = useMemo(() => routeMatches.map((item) => item.path as string), [routeMatches]);
-
-  const onCollapse = (val: boolean) => setCollapse(val);
-
-  console.log(routeMatches);
 
   // 面包屑子项
   const breadcrumbItems = [
@@ -68,10 +64,10 @@ const PageLayout: FC<RouteConfigComponentProps> = (props) => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider collapsible collapsed={collapse} onCollapse={onCollapse}>
+      <Sider trigger={null} collapsible collapsed={collapse}>
         <div className="h-8 m-4 text-white overflow-hidden">
           <img className="h-full" src={logo} alt="" />
-          <span>{ !collapse && '博客后台管理系统' }</span>
+          <span>{!collapse && "博客后台管理系统"}</span>
         </div>
         {route?.routes && (
           <Menu theme="dark" mode="inline" defaultOpenKeys={defaultOpenKeys} selectedKeys={selectedKeys}>
@@ -80,7 +76,10 @@ const PageLayout: FC<RouteConfigComponentProps> = (props) => {
         )}
       </Sider>
       <Layout>
-        <Header className="bg-white flex items-center">
+        <Header className="p-0 h-12 bg-white flex items-center">
+          <span className="px-4 cursor-pointer" onClick={() => setCollapse(!collapse)}>
+            {collapse ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          </span>
           <Breadcrumb>{breadcrumbItems}</Breadcrumb>
         </Header>
         <Content className="m-4">
