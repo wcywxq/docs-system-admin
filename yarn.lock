@@ -1913,6 +1913,11 @@
   "resolved" "https://registry.npm.taobao.org/@types/minimist/download/@types/minimist-1.2.1.tgz"
   "version" "1.2.1"
 
+"@types/mockjs@^1.0.3":
+  "integrity" "sha1-vY7jx8u9mhh4irZ3ueT5fI0LsL8="
+  "resolved" "https://registry.npm.taobao.org/@types/mockjs/download/@types/mockjs-1.0.3.tgz"
+  "version" "1.0.3"
+
 "@types/node@*":
   "integrity" "sha1-yt5LZPhDj1iJUaazWEPOU2hT8ls="
   "resolved" "https://registry.npm.taobao.org/@types/node/download/@types/node-14.14.28.tgz"
@@ -2835,6 +2840,13 @@
   "integrity" "sha1-fPeDMxMgCYv772IN87PHcBR7wiQ="
   "resolved" "https://registry.npm.taobao.org/axe-core/download/axe-core-4.1.2.tgz"
   "version" "4.1.2"
+
+"axios@^0.21.1":
+  "integrity" "sha1-IlY0gZYvTWvemnbVFu8OXTwJsrg="
+  "resolved" "https://registry.npm.taobao.org/axios/download/axios-0.21.1.tgz?cache=0&sync_timestamp=1608609170235&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Faxios%2Fdownload%2Faxios-0.21.1.tgz"
+  "version" "0.21.1"
+  dependencies:
+    "follow-redirects" "^1.10.0"
 
 "axobject-query@^2.2.0":
   "integrity" "sha1-lD1H4QwLcEqkInXiDt83ImSJib4="
@@ -3796,7 +3808,7 @@
   dependencies:
     "delayed-stream" "~1.0.0"
 
-"commander@^2.20.0":
+"commander@*", "commander@^2.20.0":
   "integrity" "sha1-/UhehMA+tIgcIHIrpIA16FMa6zM="
   "resolved" "https://registry.npm.taobao.org/commander/download/commander-2.20.3.tgz?cache=0&sync_timestamp=1613374120060&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-2.20.3.tgz"
   "version" "2.20.3"
@@ -5644,7 +5656,7 @@
     "inherits" "^2.0.3"
     "readable-stream" "^2.3.6"
 
-"follow-redirects@^1.0.0":
+"follow-redirects@^1.0.0", "follow-redirects@^1.10.0":
   "integrity" "sha1-3XPI7/wScoulz0JZ12DqX7g+MUc="
   "resolved" "https://registry.npm.taobao.org/follow-redirects/download/follow-redirects-1.13.2.tgz"
   "version" "1.13.2"
@@ -8304,6 +8316,13 @@
   "integrity" "sha1-PrXtYmInVteaXw4qIh3+utdcL34="
   "resolved" "https://registry.npm.taobao.org/mkdirp/download/mkdirp-1.0.4.tgz?cache=0&sync_timestamp=1599533186253&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmkdirp%2Fdownload%2Fmkdirp-1.0.4.tgz"
   "version" "1.0.4"
+
+"mockjs@^1.1.0":
+  "integrity" "sha1-5qDDeOkZBtuv8gkRzAJzs8fXWwY="
+  "resolved" "https://registry.npm.taobao.org/mockjs/download/mockjs-1.1.0.tgz"
+  "version" "1.1.0"
+  dependencies:
+    "commander" "*"
 
 "modern-normalize@^1.0.0":
   "integrity" "sha1-U52EoeFBM4sBs0bz4nOW0O0XYB4="

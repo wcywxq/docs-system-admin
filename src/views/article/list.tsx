@@ -1,6 +1,7 @@
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { Table, Space, Card, Form, Input, Button, Row, Col, Select, DatePicker } from "antd";
 import { useForm } from "antd/lib/form/Form";
+import axios from "axios";
 
 interface Article {
   key: number;
@@ -30,20 +31,37 @@ const formLayout = {
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
-const dataSource: Article[] = [];
-
 const ArticleList: FC = () => {
   const [form] = useForm();
+  const [loading, setLoading] = useState(false);
+  const [dataSource, setDataSource] = useState<Array<Article>>([]);
 
   // 查询
   const onSearch = (values: any) => {
-    console.log(values);
+    queryList(values);
   };
 
   // 重置
   const onReset = () => {
     form.resetFields();
   };
+
+  const queryList = async (params?: any) => {
+    setLoading(true);
+    try {
+      console.log(params);
+      const fetchData = await axios.get("/api/article/list");
+      setDataSource(fetchData.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    queryList();
+  }, []);
 
   return (
     <Space className="w-full" direction="vertical" size="large">
@@ -134,7 +152,7 @@ const ArticleList: FC = () => {
           </Row>
         </Form>
       </Card>
-      <Table<Article> bordered dataSource={dataSource}>
+      <Table<Article> bordered dataSource={dataSource} loading={loading}>
         <Table.Column<Article> title="文章标题" dataIndex="title" align="center"></Table.Column>
         <Table.Column<Article> title="文章作者" dataIndex="author" align="center"></Table.Column>
         <Table.Column<Article> title="关键字" dataIndex="keywords" align="center"></Table.Column>
