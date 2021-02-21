@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { matchRoutes, RouteConfig, RouteConfigComponentProps } from "react-router-config";
 import { Layout, Breadcrumb, Menu } from "antd";
 import { MailOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
@@ -6,16 +6,20 @@ import { Link, useLocation } from "react-router-dom";
 import RouteView from "./RouteView";
 import logo from "../assets/image/logo.svg";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
 const PageLayout: FC<RouteConfigComponentProps> = (props) => {
   const { route } = props;
+
   const { pathname } = useLocation();
+
   // 折叠状态控制
   const [collapse, setCollapse] = useState(false);
+
   // 当前激活的菜单的 key
   const selectedKeys = useMemo(() => [pathname], [pathname]);
+
   // 默认匹配的路由
   const routeMatches = useMemo(() => {
     if (route && route.routes) {
@@ -62,6 +66,9 @@ const PageLayout: FC<RouteConfigComponentProps> = (props) => {
     });
   };
 
+  // 设置收起展开
+  const handleCollapse = useCallback(() => setCollapse(!collapse), [collapse]);
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider trigger={null} collapsible collapsed={collapse}>
@@ -77,7 +84,7 @@ const PageLayout: FC<RouteConfigComponentProps> = (props) => {
       </Sider>
       <Layout>
         <Header className="p-0 h-12 bg-white flex items-center">
-          <span className="px-4 cursor-pointer" onClick={() => setCollapse(!collapse)}>
+          <span className="px-4 cursor-pointer" onClick={handleCollapse}>
             {collapse ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </span>
           <Breadcrumb>{breadcrumbItems}</Breadcrumb>

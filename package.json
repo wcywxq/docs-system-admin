@@ -31,6 +31,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-router-config": "^5.0.2",
     "@types/react-router-dom": "^5.1.7",
+    "antd-dayjs-webpack-plugin": "^1.0.6",
     "autoprefixer": "^9.8.6",
     "node-sass": "^5.0.0",
     "postcss": "^7.0.35",
