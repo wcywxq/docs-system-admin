@@ -18,8 +18,8 @@ import {
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-interface Article {
-  key: number;
+interface ArticleModel {
+  key: number | string;
   articleId: string;
   title: string;
   author: string;
@@ -50,7 +50,7 @@ const formLayout = {
 const ArticleList: FC = () => {
   const [form] = useForm();
   const [loading, setLoading] = useState(false);
-  const [dataSource, setDataSource] = useState<Array<Article>>([]);
+  const [dataSource, setDataSource] = useState<Array<ArticleModel>>([]);
 
   /**
    * @description 查询
@@ -90,7 +90,7 @@ const ArticleList: FC = () => {
    * @param val
    * @param row
    */
-  const onSwitchReleaseStatus = (val: boolean, row: Article) => {
+  const onSwitchReleaseStatus = (val: boolean, row: ArticleModel) => {
     const newData = [...dataSource];
     const target = newData.find((item) => item.articleId === row.articleId);
     if (target) {
@@ -192,15 +192,15 @@ const ArticleList: FC = () => {
           </Row>
         </Form>
       </Card>
-      <Table<Article> bordered dataSource={dataSource} loading={loading} rowKey={(record) => record.articleId}>
-        <Table.Column<Article>
+      <Table<ArticleModel> bordered dataSource={dataSource} loading={loading} rowKey={(record) => record.articleId}>
+        <Table.Column<ArticleModel>
           title="文章标题"
           dataIndex="title"
           align="center"
           render={(title, row) => <Link to={`/article/detail?id=${row.articleId}`}>{title}</Link>}
         ></Table.Column>
-        <Table.Column<Article> title="文章作者" dataIndex="author" align="center"></Table.Column>
-        <Table.Column<Article>
+        <Table.Column<ArticleModel> title="文章作者" dataIndex="author" align="center"></Table.Column>
+        <Table.Column<ArticleModel>
           title="关键字"
           dataIndex="keywords"
           align="center"
@@ -214,13 +214,13 @@ const ArticleList: FC = () => {
             </>
           )}
         ></Table.Column>
-        <Table.Column<Article>
+        <Table.Column<ArticleModel>
           title="封面图"
           dataIndex="thumbUrl"
           align="center"
           render={(thumbUrl) => <Avatar src={thumbUrl} shape="square" size="large" />}
         ></Table.Column>
-        <Table.Column<Article>
+        <Table.Column<ArticleModel>
           title="文章标签"
           dataIndex="tag"
           align="center"
@@ -234,13 +234,13 @@ const ArticleList: FC = () => {
             </>
           )}
         ></Table.Column>
-        <Table.Column<Article>
+        <Table.Column<ArticleModel>
           title="文章分类"
           dataIndex="category"
           align="center"
           render={(category) => <Tag color="blue">{category}</Tag>}
         ></Table.Column>
-        <Table.Column<Article>
+        <Table.Column<ArticleModel>
           title="文章发布状态"
           dataIndex="releaseStatus"
           align="center"
@@ -253,7 +253,7 @@ const ArticleList: FC = () => {
             />
           )}
         ></Table.Column>
-        <Table.Column<Article>
+        <Table.Column<ArticleModel>
           title="文章来源"
           dataIndex="source"
           align="center"
@@ -269,8 +269,8 @@ const ArticleList: FC = () => {
             )
           }
         ></Table.Column>
-        <Table.Column<Article> title="文章创建时间" dataIndex="createTime" align="center"></Table.Column>
-        <Table.Column<Article>
+        <Table.Column<ArticleModel> title="文章创建时间" dataIndex="createTime" align="center"></Table.Column>
+        <Table.Column<ArticleModel>
           title="操作"
           align="center"
           render={(_, row) => (

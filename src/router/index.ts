@@ -1,16 +1,27 @@
 import { RouteConfig } from "react-router-config";
 import PageLayout from "../layouts/PageLayout";
 import RouteView from "../layouts/RouteView";
+import UserList from "../views/user/list";
 import ArticleAdd from "../views/article/add";
 import ArticleList from "../views/article/list";
-import AuthorAdd from "../views/author/list";
-import AuthorList from "../views/author/list";
 
 const routes: RouteConfig[] = [
   {
     path: "/",
     component: PageLayout,
     routes: [
+      {
+        path: "/user",
+        title: "用户管理",
+        component: RouteView,
+        routes: [
+          {
+            path: "/user/list",
+            title: "用户列表",
+            component: UserList,
+          },
+        ],
+      },
       {
         path: "/article",
         title: "文章管理",
@@ -25,23 +36,6 @@ const routes: RouteConfig[] = [
             path: "/article/list",
             title: "文章列表",
             component: ArticleList,
-          },
-        ],
-      },
-      {
-        path: "/author",
-        title: "作者管理",
-        component: RouteView,
-        routes: [
-          {
-            path: "/author/add",
-            title: "添加作者",
-            component: AuthorAdd,
-          },
-          {
-            path: "/author/list",
-            title: "作者列表",
-            component: AuthorList,
           },
         ],
       },
