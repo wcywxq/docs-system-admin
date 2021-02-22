@@ -1,7 +1,22 @@
 import React, { FC, useState, useEffect } from "react";
-import { Table, Space, Card, Form, Input, Button, Row, Col, Select, DatePicker, Tag, Switch } from "antd";
-import { useForm } from "antd/lib/form/Form";
+import {
+  Table,
+  Space,
+  Card,
+  Form,
+  Input,
+  Button,
+  Row,
+  Col,
+  Select,
+  DatePicker,
+  Tag,
+  Switch,
+  Avatar,
+  Popconfirm,
+} from "antd";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 interface Article {
   key: number;
@@ -17,6 +32,10 @@ interface Article {
   createTime: Date;
 }
 
+const { useForm } = Form;
+const { Option } = Select;
+const { RangePicker } = DatePicker;
+
 const formLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -28,9 +47,6 @@ const formLayout = {
   },
 };
 
-const { Option } = Select;
-const { RangePicker } = DatePicker;
-
 const ArticleList: FC = () => {
   const [form] = useForm();
   const [loading, setLoading] = useState(false);
@@ -38,7 +54,7 @@ const ArticleList: FC = () => {
 
   /**
    * @description 查询
-   * @param values 
+   * @param values
    */
   const onSearch = (values: any) => {
     queryList(values);
@@ -53,7 +69,7 @@ const ArticleList: FC = () => {
 
   /**
    * @description 查询列表
-   * @param params 
+   * @param params
    */
   const queryList = async (params?: any) => {
     setLoading(true);
@@ -71,8 +87,8 @@ const ArticleList: FC = () => {
 
   /**
    * @description 发布状态切换监听事件
-   * @param val 
-   * @param row 
+   * @param val
+   * @param row
    */
   const onSwitchReleaseStatus = (val: boolean, row: Article) => {
     const newData = [...dataSource];
@@ -90,8 +106,8 @@ const ArticleList: FC = () => {
   return (
     <Space className="w-full" direction="vertical" size="large">
       <Card>
-        <Form {...formLayout} form={form} layout="inline" onFinish={onSearch}>
-          <Row justify="space-between" gutter={[8, 8]}>
+        <Form {...formLayout} form={form} layout="horizontal" onFinish={onSearch}>
+          <Row justify="space-between" gutter={[8, 0]}>
             <Col span={8}>
               <Form.Item className="w-full" label="文章标题" name="title">
                 <Input placeholder="请输入文章标题" />
@@ -177,7 +193,12 @@ const ArticleList: FC = () => {
         </Form>
       </Card>
       <Table<Article> bordered dataSource={dataSource} loading={loading} rowKey={(record) => record.articleId}>
-        <Table.Column<Article> title="文章标题" dataIndex="title" align="center"></Table.Column>
+        <Table.Column<Article>
+          title="文章标题"
+          dataIndex="title"
+          align="center"
+          render={(title, row) => <Link to={`/article/detail?id=${row.articleId}`}>{title}</Link>}
+        ></Table.Column>
         <Table.Column<Article> title="文章作者" dataIndex="author" align="center"></Table.Column>
         <Table.Column<Article>
           title="关键字"
@@ -193,7 +214,12 @@ const ArticleList: FC = () => {
             </>
           )}
         ></Table.Column>
-        <Table.Column<Article> title="封面图" dataIndex="thumbUrl" align="center"></Table.Column>
+        <Table.Column<Article>
+          title="封面图"
+          dataIndex="thumbUrl"
+          align="center"
+          render={(thumbUrl) => <Avatar src={thumbUrl} shape="square" size="large" />}
+        ></Table.Column>
         <Table.Column<Article>
           title="文章标签"
           dataIndex="tag"
@@ -244,7 +270,28 @@ const ArticleList: FC = () => {
           }
         ></Table.Column>
         <Table.Column<Article> title="文章创建时间" dataIndex="createTime" align="center"></Table.Column>
-        <Table.Column<Article> title="操作" align="center"></Table.Column>
+        <Table.Column<Article>
+          title="操作"
+          align="center"
+          render={(_, row) => (
+            <Space>
+              <Button type="primary">编辑</Button>
+              <Popconfirm
+                title={
+                  <span>
+                    确定删除文章<span className="text-danger font-bold">{row.title}</span>吗?
+                  </span>
+                }
+                okText="确定"
+                cancelText="取消"
+              >
+                <Button danger type="primary">
+                  删除
+                </Button>
+              </Popconfirm>
+            </Space>
+          )}
+        ></Table.Column>
       </Table>
     </Space>
   );
