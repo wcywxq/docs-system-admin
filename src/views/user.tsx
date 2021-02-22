@@ -43,7 +43,7 @@ const formLayout = {
   },
 };
 
-const AuthorList: FC = () => {
+const UserPage: FC = () => {
   const [form] = useForm();
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState<Array<UserModel>>([]);
@@ -202,4 +202,4 @@ const AuthorList: FC = () => {
   );
 };
 
-export default AuthorList;
+export default UserPage;
