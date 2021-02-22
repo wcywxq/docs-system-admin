@@ -1,6 +1,7 @@
 import { RouteConfig } from "react-router-config";
 import PageLayout from "../layouts/PageLayout";
 import RouteView from "../layouts/RouteView";
+import LoginPage from "../views/login";
 import UserPage from "../views/user";
 import ArticleAdd from "../views/article/add";
 import ArticleList from "../views/article/list";
@@ -14,8 +15,11 @@ import ServerErrorPage from "../views/exception/500";
 
 const routes: RouteConfig[] = [
   {
+    path: "/login",
+    component: LoginPage,
+  },
+  {
     path: "/",
-    exact: true,
     component: PageLayout,
     routes: [
       {
@@ -83,9 +87,6 @@ const routes: RouteConfig[] = [
         ],
       },
     ],
-  },
-  {
-    component: NotFoundPage,
   },
 ];
 

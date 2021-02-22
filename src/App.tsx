@@ -11,7 +11,7 @@ dayjs.locale("zh-cn");
 const App: FC = () => {
   return (
     <ConfigProvider locale={zhCN}>
-      <Router>{renderRoutes(routes)}</Router>;
+      <Router>{renderRoutes(routes)}</Router>
     </ConfigProvider>
   );
 };

@@ -2,7 +2,7 @@ import { FC, useCallback, useMemo, useState } from "react";
 import { matchRoutes, RouteConfig, RouteConfigComponentProps } from "react-router-config";
 import { Layout, Breadcrumb, Menu } from "antd";
 import { MailOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import RouteView from "./RouteView";
 import logo from "../assets/image/logo.svg";
 
@@ -11,6 +11,8 @@ const { SubMenu } = Menu;
 
 const PageLayout: FC<RouteConfigComponentProps> = (props) => {
   const { route } = props;
+
+  const history = useHistory();
 
   const { pathname } = useLocation();
 
@@ -24,10 +26,13 @@ const PageLayout: FC<RouteConfigComponentProps> = (props) => {
   const routeMatches = useMemo(() => {
     if (route && route.routes) {
       const matches = matchRoutes(route.routes, pathname);
+      if (!matches.length) {
+        history.push("/exception/404");
+      }
       return matches.map((item) => item.route);
     }
     return [];
-  }, [pathname, route]);
+  }, [history, pathname, route]);
 
   // 默认打开的菜单的 key
   const defaultOpenKeys = useMemo(() => routeMatches.map((item) => item.path as string), [routeMatches]);
@@ -74,7 +79,7 @@ const PageLayout: FC<RouteConfigComponentProps> = (props) => {
       <Sider trigger={null} collapsible collapsed={collapse}>
         <div className="h-8 m-4 text-white overflow-hidden">
           <img className="h-full" src={logo} alt="" />
-          <span>{!collapse && "博客后台管理系统"}</span>
+          <span>{!collapse && "Notice Admin"}</span>
         </div>
         {route?.routes && (
           <Menu theme="dark" mode="inline" defaultOpenKeys={defaultOpenKeys} selectedKeys={selectedKeys}>
