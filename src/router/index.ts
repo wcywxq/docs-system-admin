@@ -15,10 +15,6 @@ import ServerErrorPage from "../views/exception/500";
 
 const routes: RouteConfig[] = [
   {
-    path: "/login",
-    component: LoginPage,
-  },
-  {
     path: "/",
     component: PageLayout,
     routes: [
