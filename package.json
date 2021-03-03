@@ -9,8 +9,10 @@
     "eject": "craco eject"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.5.0",
     "antd": "^4.12.3",
     "axios": "^0.21.1",
+    "dayjs": "^1.10.4",
     "marked": "^2.0.0",
     "mockjs": "^1.1.0",
     "react": "^17.0.1",
