@@ -41,4 +41,10 @@ export default defineConfig({
     basePath: '/',
   },
   esbuild: {},
+  extraPostCSSPlugins: [
+    require('postcss-import'),
+    require('tailwindcss'),
+    require('postcss-nested'),
+    require('autoprefixer'),
+  ],
 });
