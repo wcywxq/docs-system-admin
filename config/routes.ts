@@ -29,8 +29,8 @@
               },
               {
                 path: '/welcome',
-                name: 'welcome',
-                icon: 'smile',
+                name: '首页',
+                icon: 'home',
                 component: './Welcome',
               },
               {
