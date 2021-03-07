@@ -1,11 +1,10 @@
 ﻿export default [
   {
-    path: '/',
-    component: '../layouts/BlankLayout',
+    path: '/user',
+    layout: false,
     routes: [
       {
         path: '/user',
-        component: '../layouts/UserLayout',
         routes: [
           {
             name: 'login',
@@ -14,56 +13,56 @@
           },
         ],
       },
+    ],
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    icon: 'crown',
+    access: 'canAdmin',
+    component: './Admin',
+    routes: [
       {
-        path: '/',
-        component: '../layouts/SecurityLayout',
-        routes: [
-          {
-            path: '/',
-            component: '../layouts/BasicLayout',
-            authority: ['admin', 'user'],
-            routes: [
-              {
-                path: '/',
-                redirect: '/welcome',
-              },
-              {
-                path: '/welcome',
-                name: '首页',
-                icon: 'home',
-                component: './Welcome',
-              },
-              {
-                path: '/admin',
-                name: 'admin',
-                icon: 'crown',
-                component: './Admin',
-                authority: ['admin'],
-                routes: [
-                  {
-                    path: '/admin/sub-page',
-                    name: 'sub-page',
-                    icon: 'smile',
-                    component: './Welcome',
-                    authority: ['admin'],
-                  },
-                ],
-              },
-              {
-                name: 'list.table-list',
-                icon: 'table',
-                path: '/list',
-                component: './TableList',
-              },
-              {
-                component: './404',
-              },
-            ],
-          },
-          {
-            component: './404',
-          },
-        ],
+        path: '/admin/sub-page',
+        name: 'sub-page',
+        icon: 'smile',
+        component: './Welcome',
+      },
+    ],
+  },
+  {
+    name: 'list.table-list',
+    icon: 'table',
+    path: '/list',
+    component: './TableList',
+  },
+  {
+    path: '/',
+    redirect: '/welcome',
+  },
+  {
+    path: '/welcome',
+    name: '首页',
+    icon: 'home',
+    component: './Welcome',
+  },
+  {
+    path: '/article',
+    name: '文章管理',
+    icon: 'book',
+    redirect: '/article/list',
+    routes: [
+      {
+        name: '文章列表',
+        icon: 'smile',
+        path: '/article/list',
+        component: './article/List',
+      },
+      {
+        name: '文章创作',
+        icon: 'smile',
+        path: '/article/create',
+        component: './article/Create',
       },
     ],
   },
