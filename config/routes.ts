@@ -47,22 +47,25 @@
     component: './Welcome',
   },
   {
-    path: '/article',
     name: '文章管理',
     icon: 'book',
-    redirect: '/article/list',
     routes: [
       {
         name: '文章列表',
         icon: 'smile',
         path: '/article/list',
         component: './article/List',
+        exact: true,
       },
       {
         name: '文章创作',
         icon: 'smile',
         path: '/article/create',
         component: './article/Create',
+        exact: true,
+      },
+      {
+        component: './404',
       },
     ],
   },
