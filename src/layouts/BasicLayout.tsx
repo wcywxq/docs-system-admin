@@ -11,7 +11,7 @@ import type {
 import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
 import React, { useEffect, useMemo, useRef } from 'react';
 import type { Dispatch } from 'umi';
-import { Link, useIntl, connect, history } from 'umi';
+import { Link, connect, history } from 'umi';
 import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
@@ -89,9 +89,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
       pathname: '/',
     },
   } = props;
-
   const menuDataRef = useRef<MenuDataItem[]>([]);
-
   useEffect(() => {
     if (dispatch) {
       dispatch({
@@ -108,8 +106,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
         payload,
       });
     }
-  };
-  // get children authority
+  }; // get children authority
+
   const authorized = useMemo(
     () =>
       getMatchMenu(location.pathname || '/', menuDataRef.current).pop() || {
@@ -117,13 +115,9 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
       },
     [location.pathname],
   );
-
-  const { formatMessage } = useIntl();
-
   return (
     <ProLayout
       logo={logo}
-      formatMessage={formatMessage}
       {...props}
       {...settings}
       onCollapse={handleMenuCollapse}
@@ -136,12 +130,13 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
         ) {
           return defaultDom;
         }
+
         return <Link to={menuItemProps.path}>{defaultDom}</Link>;
       }}
       breadcrumbRender={(routers = []) => [
         {
           path: '/',
-          breadcrumbName: formatMessage({ id: 'menu.home' }),
+          breadcrumbName: '首页',
         },
         ...routers,
       ]}
@@ -157,6 +152,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
         if (settings.footerRender || settings.footerRender === undefined) {
           return defaultFooterDom;
         }
+
         return null;
       }}
       menuDataRender={menuDataRender}
