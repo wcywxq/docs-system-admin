@@ -1,40 +1,8 @@
 ﻿export default [
   {
-    path: '/user',
+    path: '/login',
     layout: false,
-    routes: [
-      {
-        path: '/user',
-        routes: [
-          {
-            name: 'login',
-            path: '/user/login',
-            component: './User/login',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
-    component: './Admin',
-    routes: [
-      {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        icon: 'smile',
-        component: './Welcome',
-      },
-    ],
-  },
-  {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
+    component: './Login',
   },
   {
     path: '/',
@@ -47,6 +15,45 @@
     component: './Welcome',
   },
   {
+    path: '/admin',
+    name: '管理员权限',
+    icon: 'crown',
+    access: 'canAdmin',
+    routes: [
+      {
+        name: '账号管理',
+        icon: 'smile',
+        path: '/admin/account',
+        component: './admin/Account',
+        exact: true,
+      },
+      {
+        name: '角色管理',
+        icon: 'smile',
+        path: '/admin/role',
+        component: './admin/Role',
+        exact: true,
+      },
+      {
+        name: '菜单管理',
+        icon: 'smile',
+        path: '/admin/menu',
+        component: './admin/Menu',
+        exact: true,
+      },
+      {
+        component: './404',
+      },
+    ],
+  },
+  {
+    path: '/dashboard',
+    name: '工作台',
+    icon: 'dashboard',
+    component: './Dashboard',
+  },
+  {
+    path: '/article',
     name: '文章管理',
     icon: 'book',
     routes: [
@@ -68,6 +75,24 @@
         component: './404',
       },
     ],
+  },
+  {
+    path: '/category',
+    name: '分类管理',
+    icon: 'shopping',
+    component: './Category',
+  },
+  {
+    path: '/tag',
+    name: '标签管理',
+    icon: 'tag',
+    component: './Tag',
+  },
+  {
+    path: '/review',
+    name: '评论管理',
+    icon: 'message',
+    component: './Review',
   },
   {
     component: './404',
