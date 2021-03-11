@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useMemo, useState, memo } from "react";
 import { matchRoutes, RouteConfig, RouteConfigComponentProps } from "react-router-config";
 import { Layout, Breadcrumb, Menu } from "antd";
 import { MailOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
@@ -9,7 +9,7 @@ import logo from "../assets/image/logo.svg";
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
-const PageLayout: FC<RouteConfigComponentProps> = (props) => {
+const BasicLayout: FC<RouteConfigComponentProps> = props => {
   const { route } = props;
 
   const { pathname } = useLocation();
@@ -24,24 +24,24 @@ const PageLayout: FC<RouteConfigComponentProps> = (props) => {
   const routeMatches = useMemo(() => {
     if (route && route.routes) {
       const matches = matchRoutes(route.routes, pathname);
-      return matches.map((item) => item.route);
+      return matches.map(item => item.route);
     }
     return [];
   }, [pathname, route]);
 
   // 默认打开的菜单的 key
-  const defaultOpenKeys = useMemo(() => routeMatches.map((item) => item.path as string), [routeMatches]);
+  const defaultOpenKeys = useMemo(() => routeMatches.map(item => item.path as string), [routeMatches]);
 
   // 面包屑子项
   const breadcrumbItems = [
     <Breadcrumb.Item key="home">
       <Link to="/">首页</Link>
-    </Breadcrumb.Item>,
+    </Breadcrumb.Item>
   ].concat(
-    routeMatches.map((item) => {
-      if (item.path === pathname || item.routes) return <Breadcrumb.Item>{item.title}</Breadcrumb.Item>;
+    routeMatches.map(item => {
+      if (item.path === pathname || item.routes) return <Breadcrumb.Item key={item.key}>{item.title}</Breadcrumb.Item>;
       return (
-        <Breadcrumb.Item>
+        <Breadcrumb.Item key={item.key}>
           <Link to={item.path as string}>{item.title}</Link>
         </Breadcrumb.Item>
       );
@@ -50,11 +50,11 @@ const PageLayout: FC<RouteConfigComponentProps> = (props) => {
 
   // 递归实现菜单渲染
   const renderMenu = (arr: RouteConfig[]) => {
-    return arr.map((item) => {
+    return arr.map(item => {
       if (item.routes) {
         return (
           <SubMenu key={item.path as string} icon={<MailOutlined />} title={item.title}>
-            {renderMenu(item.routes.filter((child) => child.path))}
+            {renderMenu(item.routes.filter(child => child.path !== "*"))}
           </SubMenu>
         );
       }
@@ -78,7 +78,7 @@ const PageLayout: FC<RouteConfigComponentProps> = (props) => {
         </div>
         {route?.routes && (
           <Menu theme="dark" mode="inline" defaultOpenKeys={defaultOpenKeys} selectedKeys={selectedKeys}>
-            {renderMenu(route.routes.filter((item) => item.path))}
+            {renderMenu(route.routes.filter(item => item.path !== "*"))}
           </Menu>
         )}
       </Sider>
@@ -97,4 +97,4 @@ const PageLayout: FC<RouteConfigComponentProps> = (props) => {
   );
 };
 
-export default PageLayout;
+export default memo(BasicLayout);

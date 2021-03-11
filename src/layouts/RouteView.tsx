@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, Fragment } from "react";
 import { renderRoutes, RouteConfigComponentProps } from "react-router-config";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import NotFoundPage from "../views/exception/404";
@@ -17,7 +17,7 @@ const RouteView: FC<RouteConfigComponentProps> = (props) => {
     );
   }
 
-  return <></>;
+  return <Fragment></Fragment>;
 };
 
 export default RouteView;

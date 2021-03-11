@@ -1,10 +1,10 @@
-import { FC } from 'react';
+import { FC, Fragment } from 'react';
 
 const FriendShipPage: FC = () => {
     return (
-        <>
+        <Fragment>
             友情链接
-        </>
+        </Fragment>
     )
 }
 

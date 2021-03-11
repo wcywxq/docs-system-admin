@@ -1,5 +1,5 @@
 import { RouteConfig } from "react-router-config";
-import PageLayout from "../layouts/PageLayout";
+import BasicLayout from "../layouts/BasicLayout";
 import RouteView from "../layouts/RouteView";
 import LoginPage from "../views/login";
 import UserPage from "../views/user";
@@ -16,7 +16,7 @@ import ServerErrorPage from "../views/exception/500";
 const routes: RouteConfig[] = [
   {
     path: "/",
-    component: PageLayout,
+    component: BasicLayout,
     routes: [
       {
         path: "/user",
@@ -32,12 +32,18 @@ const routes: RouteConfig[] = [
             path: "/article/add",
             title: "添加文章",
             component: ArticleAdd,
+            exact: true,
           },
           {
             path: "/article/list",
             title: "文章列表",
             component: ArticleList,
+            exact: true,
           },
+          {
+            path: "*",
+            component: NotFoundPage
+          }
         ],
       },
       {
@@ -69,19 +75,30 @@ const routes: RouteConfig[] = [
             path: "/exception/403",
             title: "403",
             component: ForbiddenPage,
+            exact: true
           },
           {
             path: "/exception/404",
             title: "404",
             component: NotFoundPage,
+            exact: true
           },
           {
             path: "/exception/500",
             title: "500",
             component: ServerErrorPage,
+            exact: true
           },
+          {
+            path: "*",
+            component: NotFoundPage
+          }
         ],
       },
+      {
+        path: "*",
+        component: NotFoundPage
+      }
     ],
   },
 ];

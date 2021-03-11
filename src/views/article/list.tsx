@@ -1,20 +1,5 @@
-import React, { FC, useState, useEffect } from "react";
-import {
-  Table,
-  Space,
-  Card,
-  Form,
-  Input,
-  Button,
-  Row,
-  Col,
-  Select,
-  DatePicker,
-  Tag,
-  Switch,
-  Avatar,
-  Popconfirm,
-} from "antd";
+import { FC, useState, useEffect, Fragment } from "react";
+import { Table, Space, Card, Form, Input, Button, Row, Col, Select, DatePicker, Tag, Switch, Avatar, Popconfirm, notification } from "antd";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -39,12 +24,12 @@ const { RangePicker } = DatePicker;
 const formLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 5 },
+    sm: { span: 5 }
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 19 },
-  },
+    sm: { span: 19 }
+  }
 };
 
 const ArticleList: FC = () => {
@@ -53,11 +38,28 @@ const ArticleList: FC = () => {
   const [dataSource, setDataSource] = useState<Array<ArticleModel>>([]);
 
   /**
+   * @desc 查询
+   * @param params
+   */
+  const fetchList = async (params?: any) => {
+    setLoading(true);
+    try {
+      console.log(params);
+      const result = await axios.get("/api/article/list");
+      setDataSource(result.data.data);
+    } catch (err) {
+      notification.error({ message: `获取文章列表失败: ${err}` });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /**
    * @description 查询
    * @param values
    */
   const onSearch = (values: any) => {
-    queryList(values);
+    fetchList(values);
   };
 
   /**
@@ -68,31 +70,13 @@ const ArticleList: FC = () => {
   };
 
   /**
-   * @description 查询列表
-   * @param params
-   */
-  const queryList = async (params?: any) => {
-    setLoading(true);
-    try {
-      console.log(params);
-      const fetchData = await axios.get("/api/article/list");
-      console.log(fetchData);
-      setDataSource(fetchData.data.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /**
    * @description 发布状态切换监听事件
    * @param val
    * @param row
    */
   const onSwitchReleaseStatus = (val: boolean, row: ArticleModel) => {
     const newData = [...dataSource];
-    const target = newData.find((item) => item.articleId === row.articleId);
+    const target = newData.find(item => item.articleId === row.articleId);
     if (target) {
       target.releaseStatus = val ? 1 : 0;
     }
@@ -100,7 +84,7 @@ const ArticleList: FC = () => {
   };
 
   useEffect(() => {
-    queryList();
+    fetchList();
   }, []);
 
   return (
@@ -129,13 +113,7 @@ const ArticleList: FC = () => {
             </Col>
             <Col span={8}>
               <Form.Item className="w-full" label="文章标签" name="tag">
-                <Select
-                  mode="multiple"
-                  showArrow
-                  maxTagCount={"responsive" as const}
-                  placeholder="请选择文章标签"
-                  allowClear
-                >
+                <Select mode="multiple" showArrow maxTagCount={"responsive" as const} placeholder="请选择文章标签" allowClear>
                   <Option value="vue">vue</Option>
                   <Option value="react">react</Option>
                   <Option value="angular">angular</Option>
@@ -192,72 +170,50 @@ const ArticleList: FC = () => {
           </Row>
         </Form>
       </Card>
-      <Table<ArticleModel> bordered dataSource={dataSource} loading={loading} rowKey={(record) => record.articleId}>
-        <Table.Column<ArticleModel>
-          title="文章标题"
-          dataIndex="title"
-          align="center"
-          render={(title, row) => <Link to={`/article/detail?id=${row.articleId}`}>{title}</Link>}
-        ></Table.Column>
-        <Table.Column<ArticleModel> title="文章作者" dataIndex="author" align="center"></Table.Column>
+      <Table<ArticleModel> bordered dataSource={dataSource} loading={loading} rowKey={record => record.articleId}>
+        <Table.Column<ArticleModel> title="文章标题" dataIndex="title" align="center" render={(title, row) => <Link to={`/article/detail?id=${row.articleId}`}>{title}</Link>} />
+        <Table.Column<ArticleModel> title="文章作者" dataIndex="author" align="center" />
         <Table.Column<ArticleModel>
           title="关键字"
           dataIndex="keywords"
           align="center"
           render={(keywords: string[]) => (
-            <>
+            <Fragment>
               {keywords.map((keyword, index) => (
                 <Tag color="blue" key={keyword + index}>
                   {keyword}
                 </Tag>
               ))}
-            </>
+            </Fragment>
           )}
-        ></Table.Column>
-        <Table.Column<ArticleModel>
-          title="封面图"
-          dataIndex="thumbUrl"
-          align="center"
-          render={(thumbUrl) => <Avatar src={thumbUrl} shape="square" size="large" />}
-        ></Table.Column>
+        />
+        <Table.Column<ArticleModel> title="封面图" dataIndex="thumbUrl" align="center" render={thumbUrl => <Avatar src={thumbUrl} shape="square" size="large" />} />
         <Table.Column<ArticleModel>
           title="文章标签"
           dataIndex="tag"
           align="center"
           render={(tag: string[]) => (
-            <>
+            <Fragment>
               {tag.map((item, index) => (
                 <Tag color="blue" key={item + index}>
                   {item}
                 </Tag>
               ))}
-            </>
+            </Fragment>
           )}
-        ></Table.Column>
-        <Table.Column<ArticleModel>
-          title="文章分类"
-          dataIndex="category"
-          align="center"
-          render={(category) => <Tag color="blue">{category}</Tag>}
-        ></Table.Column>
+        />
+        <Table.Column<ArticleModel> title="文章分类" dataIndex="category" align="center" render={category => <Tag color="blue">{category}</Tag>} />
         <Table.Column<ArticleModel>
           title="文章发布状态"
           dataIndex="releaseStatus"
           align="center"
-          render={(releaseStatus, row) => (
-            <Switch
-              checkedChildren="已发布"
-              unCheckedChildren="未发布"
-              checked={releaseStatus === 1}
-              onChange={(checked) => onSwitchReleaseStatus(checked, row)}
-            />
-          )}
-        ></Table.Column>
+          render={(releaseStatus, row) => <Switch checkedChildren="已发布" unCheckedChildren="未发布" checked={releaseStatus === 1} onChange={checked => onSwitchReleaseStatus(checked, row)} />}
+        />
         <Table.Column<ArticleModel>
           title="文章来源"
           dataIndex="source"
           align="center"
-          render={(source) =>
+          render={source =>
             source === 1 ? (
               <Tag color="purple">
                 <span>原创</span>
@@ -268,8 +224,8 @@ const ArticleList: FC = () => {
               </Tag>
             )
           }
-        ></Table.Column>
-        <Table.Column<ArticleModel> title="文章创建时间" dataIndex="createTime" align="center"></Table.Column>
+        />
+        <Table.Column<ArticleModel> title="文章创建时间" dataIndex="createTime" align="center" />
         <Table.Column<ArticleModel>
           title="操作"
           align="center"
@@ -283,15 +239,14 @@ const ArticleList: FC = () => {
                   </span>
                 }
                 okText="确定"
-                cancelText="取消"
-              >
+                cancelText="取消">
                 <Button danger type="primary">
                   删除
                 </Button>
               </Popconfirm>
             </Space>
           )}
-        ></Table.Column>
+        />
       </Table>
     </Space>
   );
