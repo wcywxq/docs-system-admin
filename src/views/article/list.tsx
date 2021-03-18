@@ -1,11 +1,12 @@
-import { FC, useState, useEffect, Fragment } from "react";
+import { FC, useState, useCallback, useEffect, Fragment } from "react";
 import { Table, Space, Card, Form, Input, Button, Row, Col, Select, DatePicker, Tag, Switch, Avatar, Popconfirm, notification } from "antd";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import { getArticleList } from "../../apis/article";
+import dayjs from "dayjs";
 
 interface ArticleModel {
   key: number | string;
-  articleId: string;
+  article_id: string;
   title: string;
   author: string;
   keywords: string[];
@@ -45,8 +46,8 @@ const ArticleList: FC = () => {
     setLoading(true);
     try {
       console.log(params);
-      const result = await axios.get("/api/article/list");
-      setDataSource(result.data.data);
+      const result = await getArticleList();
+      setDataSource(result.data);
     } catch (err) {
       notification.error({ message: `获取文章列表失败: ${err}` });
     } finally {
@@ -59,29 +60,29 @@ const ArticleList: FC = () => {
    * @param values
    */
   const onSearch = (values: any) => {
-    fetchList(values);
+      fetchList(values);
   };
 
   /**
    * @description 重置
    */
-  const onReset = () => {
-    form.resetFields();
-  };
+  const onReset = useCallback(() => {
+      form.resetFields();
+  }, [form])
 
   /**
    * @description 发布状态切换监听事件
    * @param val
    * @param row
    */
-  const onSwitchReleaseStatus = (val: boolean, row: ArticleModel) => {
-    const newData = [...dataSource];
-    const target = newData.find(item => item.articleId === row.articleId);
-    if (target) {
-      target.releaseStatus = val ? 1 : 0;
-    }
-    setDataSource(newData);
-  };
+  const onSwitchReleaseStatus = useCallback((val: boolean, row: ArticleModel) => {
+      const newData = [...dataSource];
+      const target = newData.find(item => item.article_id === row.article_id);
+      if (target) {
+        target.releaseStatus = val ? 1 : 0;
+      }
+      setDataSource(newData);
+  }, [dataSource])
 
   useEffect(() => {
     fetchList();
@@ -170,8 +171,8 @@ const ArticleList: FC = () => {
           </Row>
         </Form>
       </Card>
-      <Table<ArticleModel> bordered dataSource={dataSource} loading={loading} rowKey={record => record.articleId}>
-        <Table.Column<ArticleModel> title="文章标题" dataIndex="title" align="center" render={(title, row) => <Link to={`/article/detail?id=${row.articleId}`}>{title}</Link>} />
+      <Table<ArticleModel> bordered dataSource={dataSource} loading={loading} rowKey={record => record.article_id}>
+        <Table.Column<ArticleModel> title="文章标题" dataIndex="title" align="center" render={(title, row) => <Link to={`/article/detail?id=${row.article_id}`}>{title}</Link>} />
         <Table.Column<ArticleModel> title="文章作者" dataIndex="author" align="center" />
         <Table.Column<ArticleModel>
           title="关键字"
@@ -188,7 +189,7 @@ const ArticleList: FC = () => {
           )}
         />
         <Table.Column<ArticleModel> title="封面图" dataIndex="thumbUrl" align="center" render={thumbUrl => <Avatar src={thumbUrl} shape="square" size="large" />} />
-        <Table.Column<ArticleModel>
+        {/* <Table.Column<ArticleModel>
           title="文章标签"
           dataIndex="tag"
           align="center"
@@ -201,7 +202,7 @@ const ArticleList: FC = () => {
               ))}
             </Fragment>
           )}
-        />
+        /> */}
         <Table.Column<ArticleModel> title="文章分类" dataIndex="category" align="center" render={category => <Tag color="blue">{category}</Tag>} />
         <Table.Column<ArticleModel>
           title="文章发布状态"
@@ -225,7 +226,7 @@ const ArticleList: FC = () => {
             )
           }
         />
-        <Table.Column<ArticleModel> title="文章创建时间" dataIndex="createTime" align="center" />
+        <Table.Column<ArticleModel> title="文章创建时间" dataIndex="createTime" align="center" render={scope => dayjs(scope).format('YYYY-MM-DD HH:mm:ss')} />
         <Table.Column<ArticleModel>
           title="操作"
           align="center"
