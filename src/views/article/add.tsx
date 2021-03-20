@@ -176,7 +176,21 @@ const ArticleAdd: FC = () => {
             </Form.Item>
           </Col>
           <Col span={24}>
-            <Form.Item label="封面图" name="thumbUrl" rules={[{ required: true, message: "封面图不能为空!" }]}>
+            <Form.Item
+              label="封面图"
+              name="thumbUrl"
+              rules={[
+                {
+                  validator: (_, value, callback) => {
+                    try {
+                      if (value && value.fileList.length) return;
+                      throw new Error("请上传封面图!");
+                    } catch (err) {
+                      callback(err);
+                    }
+                  }
+                }
+              ]}>
               <Upload
                 listType="picture-card"
                 accept="image/*"
