@@ -49,20 +49,6 @@ const ArticleAdd: FC = () => {
   };
 
   /**
-   * @desc 提交
-   */
-  const handleSubmit = (values: any) => {
-    console.log(values);
-  };
-
-  /**
-   * @desc 表单内容重置
-   */
-  const handleReset = () => {
-    form.resetFields();
-  };
-
-  /**
    * @desc 覆盖默认的上传方法
    */
   const uploadCustomRequest = (params: any) => {
@@ -126,6 +112,21 @@ const ArticleAdd: FC = () => {
    */
   const uploadThumbUrlCancelPreview = () => setPreview({ visible: false, url: "" });
 
+  /**
+   * @desc 提交
+   */
+  const handleSubmit = (values: any) => {
+    console.log(values);
+  };
+
+  /**
+   * @desc 表单内容重置
+   */
+  const handleReset = () => {
+    form.resetFields();
+    uploadThumbUrlRemove();
+  };
+
   useEffect(() => {
     fetchTagList();
   }, []);
@@ -181,6 +182,7 @@ const ArticleAdd: FC = () => {
               name="thumbUrl"
               rules={[
                 {
+                  required: true,
                   validator: (_, value, callback) => {
                     try {
                       if (value && value.fileList.length) return;
