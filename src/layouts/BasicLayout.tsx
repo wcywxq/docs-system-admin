@@ -5,6 +5,7 @@ import { MailOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/
 import { Link, useLocation } from "react-router-dom";
 import RouteView from "./RouteView";
 import logo from "../assets/image/logo.svg";
+import "./BasicLayout.scss";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -83,7 +84,7 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
         )}
       </Sider>
       <Layout>
-        <Header className="p-0 h-12 bg-white flex items-center">
+        <Header className="pro-header">
           <span className="px-4 cursor-pointer" onClick={handleCollapse}>
             {collapse ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </span>

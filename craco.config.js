@@ -1,4 +1,5 @@
 const AntdDayjsWebpackPlugin = require("antd-dayjs-webpack-plugin");
+const CracoAntDesignPlugin = require("craco-antd");
 
 module.exports = {
   style: {
@@ -6,6 +7,17 @@ module.exports = {
       plugins: [require("tailwindcss"), require("autoprefixer")],
     },
   },
+  plugins: [
+    {
+        plugin: CracoAntDesignPlugin,
+        options: {
+            customizeTheme: {
+                "@primary-color": "#215fff",
+                "@border-radius-base": "6px"
+            }
+        }
+    }
+  ],
   webpack: {
     plugins: [new AntdDayjsWebpackPlugin()],
   },
