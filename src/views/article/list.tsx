@@ -1,7 +1,7 @@
 import { FC, useState, useCallback, useEffect, Fragment } from "react";
-import { Table, Space, Card, Form, Input, Button, Row, Col, Select, DatePicker, Tag, Switch, Avatar, Popconfirm, notification } from "antd";
+import { Table, Space, Card, Form, Input, Button, Row, Col, Select, DatePicker, Tag, Switch, Avatar, Popconfirm, notification, message } from "antd";
 import { Link } from "react-router-dom";
-import { getArticleList } from "../../apis/article";
+import { deleteArticle, getArticleList } from "../../apis/article";
 import dayjs from "dayjs";
 import useSelect from "../../hooks/useSelect";
 import { getTagList } from "../../apis/tag";
@@ -58,36 +58,36 @@ const ArticleList: FC = () => {
    * @desc 查询
    * @param params
    */
-  const fetchList = async (params?: any) => {
+  const fetchList = useCallback(async () => {
+    const params = form.getFieldsValue();
     setLoading(true);
     try {
-      console.log(params);
-      const result = await getArticleList();
+      const result = await getArticleList(params);
       setDataSource(result.data.map((item: any) => ({ ...item, key: item._id })));
     } catch (err) {
       notification.error({ message: `获取文章列表失败: ${err}` });
     } finally {
       setLoading(false);
     }
-  };
-
-  /**
-   * @description 查询
-   * @param values
-   */
-  const onSearch = (values: any) => {
-    fetchList(values);
-  };
-
-  /**
-   * @description 重置
-   */
-  const onReset = useCallback(() => {
-    form.resetFields();
   }, [form]);
 
   /**
-   * @description 发布状态切换监听事件
+   * @desc 查询
+   */
+  const onSearch = useCallback(() => {
+    fetchList();
+  }, [fetchList]);
+
+  /**
+   * @desc 重置
+   */
+  const onReset = useCallback(() => {
+    form.resetFields();
+    fetchList();
+  }, [fetchList, form]);
+
+  /**
+   * @desc 发布状态切换监听事件
    * @param val
    * @param row
    */
@@ -103,9 +103,31 @@ const ArticleList: FC = () => {
     [dataSource]
   );
 
+  /**
+   * @desc 删除文章
+   * @param id 文章id
+   */
+  const handleDeleteArticle = useCallback(
+    async (id: string) => {
+      try {
+        const response: any = await deleteArticle({ id });
+        console.log(response);
+        if (response.resultCode !== 0) {
+          message.error(`删除文章失败: ${response.errorMsg.toString()}`);
+        }
+        message.success("删除文章成功");
+      } catch (err) {
+        message.error(err);
+      } finally {
+        fetchList();
+      }
+    },
+    [fetchList]
+  );
+
   useEffect(() => {
     fetchList();
-  }, []);
+  }, [fetchList]);
 
   return (
     <Space className="w-full" direction="vertical" size="large">
@@ -240,7 +262,8 @@ const ArticleList: FC = () => {
                   </span>
                 }
                 okText="确定"
-                cancelText="取消">
+                cancelText="取消"
+                onConfirm={() => handleDeleteArticle(row.key)}>
                 <Button danger type="primary">
                   删除
                 </Button>
