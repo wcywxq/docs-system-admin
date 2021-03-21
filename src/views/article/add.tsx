@@ -1,7 +1,6 @@
 import { FC, useCallback, useState } from "react";
 import { Card, Form, Input, Select, Upload, message, Button, Row, Col, Space, Modal } from "antd";
 import { UploadOutlined, RedoOutlined, CheckOutlined } from "@ant-design/icons";
-import { useHistory } from "react-router-dom";
 import useSelect from "../../hooks/useSelect";
 import { getCategoryList } from "../../apis/category";
 import { getTagList } from "../../apis/tag";
