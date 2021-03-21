@@ -48,7 +48,7 @@ const TagPage: FC = () => {
   const fetchList = async (params?: any) => {
     setLoading(true);
     const query = {} as any;
-    params.name && (query.title = params.title);
+    params.name && (query.name = params.name);
     params.createTime !== undefined && params.createTime.length && ([query.createBeginTime, query.createEndTime] = params.createTime.map((time: any) => dayjs(time).valueOf()));
     try {
       const response: any = await getTagList(query);
