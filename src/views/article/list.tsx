@@ -6,18 +6,8 @@ import dayjs from "dayjs";
 import useSelect from "../../hooks/useSelect";
 import { getTagList } from "../../apis/tag";
 import { getCategoryList } from "../../apis/category";
-
-type TagModel = {
-  _id: string;
-  name: string;
-  createTime: Date;
-};
-
-type CategoryModel = {
-  _id: string;
-  name: string;
-  createTime: Date;
-};
+import type { TagModel } from "../tag";
+import type { CategoryModel } from "../category";
 
 type ArticleModel = {
   key: string;
@@ -77,7 +67,7 @@ const ArticleList: FC = () => {
         message.error(`获取文章列表失败: ${JSON.stringify(response.errorMsg)}`);
       }
     } catch (err) {
-      message.error({ message: `获取文章列表失败: ${err}` });
+      message.error(`获取文章列表失败: ${JSON.stringify(err)}`);
     } finally {
       setLoading(false);
     }
@@ -173,7 +163,7 @@ const ArticleList: FC = () => {
               <Form.Item className="w-full" label="文章标签" name="tags">
                 <Select mode="multiple" showArrow maxTagCount={"responsive" as const} placeholder="请选择文章标签" allowClear>
                   {tagOptions.map(tag => (
-                    <Option key={tag._id} value={tag._id}>
+                    <Option key={tag.key} value={tag.key}>
                       {tag.name}
                     </Option>
                   ))}
@@ -184,7 +174,7 @@ const ArticleList: FC = () => {
               <Form.Item className="w-full" label="文章分类" name="category">
                 <Select placeholder="请选择文章分类" allowClear>
                   {categoryOptions.map(cate => (
-                    <Option key={cate._id} value={cate._id}>
+                    <Option key={cate.key} value={cate.key}>
                       {cate.name}
                     </Option>
                   ))}
@@ -239,14 +229,14 @@ const ArticleList: FC = () => {
           render={(tags: TagModel[]) => (
             <Fragment>
               {tags.map(tag => (
-                <Tag color="blue" key={tag._id}>
+                <Tag color="blue" key={tag.key}>
                   {tag.name}
                 </Tag>
               ))}
             </Fragment>
           )}
         />
-        <Table.Column<ArticleModel> title="文章分类" dataIndex="category" align="center" render={(category: CategoryModel) => <Tag color="blue">{category.name}</Tag>} />
+        <Table.Column<ArticleModel> title="文章分类" dataIndex="category" align="center" render={(category: CategoryModel | null) => <Tag color="blue">{category?.name}</Tag>} />
         <Table.Column<ArticleModel>
           title="下架/发布"
           dataIndex="isPublish"

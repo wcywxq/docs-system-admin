@@ -7,12 +7,12 @@ const URL = {
 };
 
 /**
- * @desc 获取文章列表
+ * @desc 获取标签列表
  */
 export const getTagList = (params?: any) => request({ url: URL.GET_TAG_LIST, params });
 
 /**
- * @desc 添加文章
+ * @desc 添加标签
  * @param data 请求体
  */
 export const addTag = (data: any) => request({ method: "POST", url: URL.ADD_TAG, data });

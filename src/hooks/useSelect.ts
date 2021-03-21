@@ -9,8 +9,8 @@ type ResponseSelectType = {
 
 /**
  * @desc 异步获取可选项的 hook
- * @param request 
- * @returns 
+ * @param request
+ * @returns
  */
 export default function useSelect(request: () => Promise<any>) {
   const [options, setOptions] = useState<any[]>([]);
@@ -20,7 +20,7 @@ export default function useSelect(request: () => Promise<any>) {
       try {
         const { resultCode, errorMsg, data }: ResponseSelectType = await request();
         if (resultCode !== 0) throw new Error(`初始化数据失败: ${errorMsg}`);
-        data && setOptions(data);
+        data && setOptions(data.map(item => ({ ...item, key: item._id })));
       } catch (error) {
         message.error(error);
       }
@@ -28,5 +28,5 @@ export default function useSelect(request: () => Promise<any>) {
     fetchData();
   }, [request]);
 
-  return { options }
+  return { options };
 }

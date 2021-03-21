@@ -1,9 +1,9 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
-import { Card, Form, Row, Col, Select, Button, Space, message, Input, DatePicker, Table, Popconfirm, Modal } from "antd";
+import { Card, Form, Row, Col, Button, Space, message, Input, DatePicker, Table, Popconfirm, Modal } from "antd";
 import { getTagList, deleteTag, addTag } from "../apis/tag";
 import dayjs from "dayjs";
 
-type TagModel = {
+export type TagModel = {
   key: string;
   name: string;
   createTime: Date;
