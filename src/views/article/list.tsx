@@ -3,20 +3,34 @@ import { Table, Space, Card, Form, Input, Button, Row, Col, Select, DatePicker, 
 import { Link } from "react-router-dom";
 import { getArticleList } from "../../apis/article";
 import dayjs from "dayjs";
+import useSelect from "../../hooks/useSelect";
+import { getTagList } from "../../apis/tag";
+import { getCategoryList } from "../../apis/category";
 
-interface ArticleModel {
-  key: number | string;
-  article_id: string;
+type TagModel = {
+  _id: string;
+  name: string;
+  createTime: Date;
+};
+
+type CategoryModel = {
+  _id: string;
+  name: string;
+  createTime: Date;
+};
+
+type ArticleModel = {
+  key: string;
   title: string;
   author: string;
-  keywords: string[];
+  desc: string;
   thumbUrl: string;
-  tag: string[];
-  category: string;
+  tag: TagModel[];
+  category: CategoryModel;
   releaseStatus: 0 | 1; // 0 未发布 1 已发布
   source: 0 | 1; // 0 原创 1 转载
   createTime: Date;
-}
+};
 
 const { useForm } = Form;
 const { Option } = Select;
@@ -37,6 +51,8 @@ const ArticleList: FC = () => {
   const [form] = useForm();
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState<Array<ArticleModel>>([]);
+  const { options: tagOptions } = useSelect(getTagList);
+  const { options: categoryOptions } = useSelect(getCategoryList);
 
   /**
    * @desc 查询
@@ -47,7 +63,7 @@ const ArticleList: FC = () => {
     try {
       console.log(params);
       const result = await getArticleList();
-      setDataSource(result.data);
+      setDataSource(result.data.map((item: any) => ({ ...item, key: item._id })));
     } catch (err) {
       notification.error({ message: `获取文章列表失败: ${err}` });
     } finally {
@@ -60,29 +76,32 @@ const ArticleList: FC = () => {
    * @param values
    */
   const onSearch = (values: any) => {
-      fetchList(values);
+    fetchList(values);
   };
 
   /**
    * @description 重置
    */
   const onReset = useCallback(() => {
-      form.resetFields();
-  }, [form])
+    form.resetFields();
+  }, [form]);
 
   /**
    * @description 发布状态切换监听事件
    * @param val
    * @param row
    */
-  const onSwitchReleaseStatus = useCallback((val: boolean, row: ArticleModel) => {
+  const onSwitchReleaseStatus = useCallback(
+    (val: boolean, row: ArticleModel) => {
       const newData = [...dataSource];
-      const target = newData.find(item => item.article_id === row.article_id);
+      const target = newData.find(item => item.key === row.key);
       if (target) {
         target.releaseStatus = val ? 1 : 0;
       }
       setDataSource(newData);
-  }, [dataSource])
+    },
+    [dataSource]
+  );
 
   useEffect(() => {
     fetchList();
@@ -108,30 +127,24 @@ const ArticleList: FC = () => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item className="w-full" label="关键字" name="keywords">
-                <Input className="w-full" placeholder="请输入关键字" />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
               <Form.Item className="w-full" label="文章标签" name="tag">
                 <Select mode="multiple" showArrow maxTagCount={"responsive" as const} placeholder="请选择文章标签" allowClear>
-                  <Option value="vue">vue</Option>
-                  <Option value="react">react</Option>
-                  <Option value="angular">angular</Option>
-                  <Option value="node">node</Option>
-                  <Option value="typescript">typescript</Option>
-                  <Option value="mongo">mongo</Option>
-                  <Option value="redis">redis</Option>
-                  <Option value="mysql">mysql</Option>
+                  {tagOptions.map(tag => (
+                    <Option key={tag._id} value={tag._id}>
+                      {tag.name}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item className="w-full" label="文章分类" name="category">
                 <Select placeholder="请选择文章分类" allowClear>
-                  <Option value="前端">前端</Option>
-                  <Option value="后端">后端</Option>
-                  <Option value="数据库">数据库</Option>
+                  {categoryOptions.map(cate => (
+                    <Option key={cate._id} value={cate._id}>
+                      {cate.name}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
@@ -171,39 +184,26 @@ const ArticleList: FC = () => {
           </Row>
         </Form>
       </Card>
-      <Table<ArticleModel> bordered dataSource={dataSource} loading={loading} rowKey={record => record.article_id}>
-        <Table.Column<ArticleModel> title="文章标题" dataIndex="title" align="center" render={(title, row) => <Link to={`/article/detail?id=${row.article_id}`}>{title}</Link>} />
+      <Table<ArticleModel> bordered dataSource={dataSource} loading={loading} rowKey={record => record.key}>
+        <Table.Column<ArticleModel> title="文章标题" dataIndex="title" align="center" render={(title, row) => <Link to={`/article/detail?id=${row.key}`}>{title}</Link>} />
         <Table.Column<ArticleModel> title="文章作者" dataIndex="author" align="center" />
+        <Table.Column<ArticleModel> title="文章简介" dataIndex="desc" align="center" />
+        <Table.Column<ArticleModel> title="封面图" dataIndex="thumbUrl" align="center" render={thumbUrl => <Avatar src={thumbUrl} shape="square" size="large" />} />
         <Table.Column<ArticleModel>
-          title="关键字"
-          dataIndex="keywords"
+          title="文章标签"
+          dataIndex="tags"
           align="center"
-          render={(keywords: string[]) => (
+          render={(tags: TagModel[]) => (
             <Fragment>
-              {keywords.map((keyword, index) => (
-                <Tag color="blue" key={keyword + index}>
-                  {keyword}
+              {tags.map(tag => (
+                <Tag color="blue" key={tag._id}>
+                  {tag.name}
                 </Tag>
               ))}
             </Fragment>
           )}
         />
-        <Table.Column<ArticleModel> title="封面图" dataIndex="thumbUrl" align="center" render={thumbUrl => <Avatar src={thumbUrl} shape="square" size="large" />} />
-        {/* <Table.Column<ArticleModel>
-          title="文章标签"
-          dataIndex="tag"
-          align="center"
-          render={(tag: string[]) => (
-            <Fragment>
-              {tag.map((item, index) => (
-                <Tag color="blue" key={item + index}>
-                  {item}
-                </Tag>
-              ))}
-            </Fragment>
-          )}
-        /> */}
-        <Table.Column<ArticleModel> title="文章分类" dataIndex="category" align="center" render={category => <Tag color="blue">{category}</Tag>} />
+        <Table.Column<ArticleModel> title="文章分类" dataIndex="category" align="center" render={(category: CategoryModel) => <Tag color="blue">{category.name}</Tag>} />
         <Table.Column<ArticleModel>
           title="文章发布状态"
           dataIndex="releaseStatus"
@@ -226,7 +226,7 @@ const ArticleList: FC = () => {
             )
           }
         />
-        <Table.Column<ArticleModel> title="文章创建时间" dataIndex="createTime" align="center" render={scope => dayjs(scope).format('YYYY-MM-DD HH:mm:ss')} />
+        <Table.Column<ArticleModel> title="文章创建时间" dataIndex="createTime" align="center" render={scope => dayjs(scope).format("YYYY-MM-DD HH:mm:ss")} />
         <Table.Column<ArticleModel>
           title="操作"
           align="center"

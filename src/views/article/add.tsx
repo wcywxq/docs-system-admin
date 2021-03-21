@@ -5,6 +5,8 @@ import { getCategoryList } from "../../apis/category";
 import { getTagList } from "../../apis/tag";
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/lib/upload/interface";
 import { upload } from "../../apis/utils";
+import useSelect from "../../hooks/useSelect";
+import { addArticle } from "../../apis/article";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -17,50 +19,26 @@ const formLayout = {
 const ArticleAdd: FC = () => {
   const [form] = Form.useForm();
   // 标签和分类配置项
-  const [tagOptions, setTagOptions] = useState<any[]>([]);
-  const [categoryOptions, setCategoryOptions] = useState<any[]>([]);
+  const { options: tagOptions } = useSelect(getTagList);
+  const { options: categoryOptions } = useSelect(getCategoryList);
   // 上传封面图最大上传限制
   const MAX_COUNT = 1;
   const [fileList, setFileList] = useState<any[]>([]);
   const [preview, setPreview] = useState({ visible: false, url: "" });
 
   /**
-   * @desc 获取标签列表
-   */
-  const fetchTagList = async () => {
-    try {
-      const result = await getTagList();
-      setTagOptions(result.data);
-    } catch (err) {
-      notification.error({ message: `获取标签数据失败: ${err}` });
-    }
-  };
-
-  /**
-   * @desc 获取分类列表
-   */
-  const fetchCategoryList = async () => {
-    try {
-      const result = await getCategoryList();
-      setCategoryOptions(result.data);
-    } catch (err) {
-      notification.error({ message: `获取分类数据失败: ${err}` });
-    }
-  };
-
-  /**
    * @desc 覆盖默认的上传方法
    */
   const uploadCustomRequest = (params: any) => {
     const { file, onSuccess } = params;
-    try {
-      // 文件读取
-      const reader = new FileReader();
-      reader.readAsDataURL(file as Blob);
-      reader.onload = async () => {
-        // base64 数据
-        const base64Data = reader.result;
-        if (base64Data) {
+    // 文件读取
+    const reader = new FileReader();
+    reader.readAsDataURL(file as Blob);
+    reader.onload = async () => {
+      // base64 数据
+      const base64Data = reader.result;
+      if (base64Data) {
+        try {
           // 生成 url
           const response: any = await upload({ name: file.name, data: base64Data });
           if (response.resultCode !== 0) throw new Error(`封面图上传失败: ${response.errorMsg}`);
@@ -68,14 +46,14 @@ const ArticleAdd: FC = () => {
           onSuccess(response.data);
           // 设置可控的 fileList
           setFileList([{ name: file.name, url: response.data.url }]);
+        } catch (err) {
+          message.error(err);
         }
-      };
-      reader.onerror = () => {
-        throw new Error("封面图上传失败");
-      };
-    } catch (err) {
-      message.error(err);
-    }
+      }
+    };
+    reader.onerror = () => {
+      message.error("封面图上传失败");
+    };
   };
 
   /**
@@ -113,13 +91,6 @@ const ArticleAdd: FC = () => {
   const uploadThumbUrlCancelPreview = () => setPreview({ visible: false, url: "" });
 
   /**
-   * @desc 提交
-   */
-  const handleSubmit = (values: any) => {
-    console.log(values);
-  };
-
-  /**
    * @desc 表单内容重置
    */
   const handleReset = () => {
@@ -127,13 +98,26 @@ const ArticleAdd: FC = () => {
     uploadThumbUrlRemove();
   };
 
-  useEffect(() => {
-    fetchTagList();
-  }, []);
-
-  useEffect(() => {
-    fetchCategoryList();
-  }, []);
+  /**
+   * @desc 提交
+   */
+  const handleSubmit = async (values: any) => {
+    console.log(values);
+    const requestBody = {
+      ...values,
+      thumbUrl: values.thumbUrl.file.response.url, // 封面图 url
+      createTime: new Date().getTime() // 创建时间
+    };
+    try {
+      const response = await addArticle(requestBody);
+      console.log(response);
+    } catch (err) {
+      message.error(err);
+    } finally {
+      // 表单重置
+      // handleReset();
+    }
+  };
 
   return (
     <Card>
@@ -145,11 +129,11 @@ const ArticleAdd: FC = () => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="分类" name="category_id" rules={[{ required: true, message: "请选择文章分类!" }]}>
+            <Form.Item label="分类" name="category" rules={[{ required: true, message: "请选择文章分类!" }]}>
               <Select placeholder="请选择文章分类">
-                {tagOptions.map(tag => (
-                  <Option key={tag.tag_id} value={tag.tag_id}>
-                    {tag.name}
+                {categoryOptions.map(cate => (
+                  <Option key={cate._id} value={cate._id}>
+                    {cate.name}
                   </Option>
                 ))}
               </Select>
@@ -161,11 +145,11 @@ const ArticleAdd: FC = () => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="标签" name="tag_id" rules={[{ required: true, message: "请选择文章标签" }]}>
+            <Form.Item label="标签" name="tags" rules={[{ required: true, message: "请选择文章标签" }]}>
               <Select mode="multiple" placeholder="请选择选择标签" showArrow>
-                {categoryOptions.map(cate => (
-                  <Option key={cate.category_id} value={cate.category_id}>
-                    {cate.name}
+                {tagOptions.map(tag => (
+                  <Option key={tag._id} value={tag._id}>
+                    {tag.name}
                   </Option>
                 ))}
               </Select>
@@ -185,7 +169,7 @@ const ArticleAdd: FC = () => {
                   required: true,
                   validator: (_, value, callback) => {
                     try {
-                      if (value && value.fileList.length) return;
+                      if (value && value.fileList.length) callback();
                       throw new Error("请上传封面图!");
                     } catch (err) {
                       callback(err);
