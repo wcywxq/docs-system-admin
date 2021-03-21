@@ -1,12 +1,13 @@
-import React, { FC, useState, useEffect } from "react";
-import { Card, Form, Input, Select, Upload, message, Button, Row, Col, Space, notification, Modal } from "antd";
+import { FC, useCallback, useState } from "react";
+import { Card, Form, Input, Select, Upload, message, Button, Row, Col, Space, Modal } from "antd";
 import { UploadOutlined, RedoOutlined, CheckOutlined } from "@ant-design/icons";
+import { useHistory } from "react-router-dom";
+import useSelect from "../../hooks/useSelect";
 import { getCategoryList } from "../../apis/category";
 import { getTagList } from "../../apis/tag";
-import type { RcFile, UploadChangeParam, UploadFile } from "antd/lib/upload/interface";
 import { upload } from "../../apis/utils";
-import useSelect from "../../hooks/useSelect";
 import { addArticle } from "../../apis/article";
+import type { RcFile, UploadChangeParam, UploadFile } from "antd/lib/upload/interface";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -101,23 +102,25 @@ const ArticleAdd: FC = () => {
   /**
    * @desc 提交
    */
-  const handleSubmit = async (values: any) => {
-    console.log(values);
+  const handleSubmit = useCallback(async (values: any) => {
     const requestBody = {
       ...values,
       thumbUrl: values.thumbUrl.file.response.url, // 封面图 url
       createTime: new Date().getTime() // 创建时间
     };
     try {
-      const response = await addArticle(requestBody);
-      console.log(response);
+      const response: any = await addArticle(requestBody);
+      if (response.resultCode === 0) {
+        message.success('添加文章成功');
+        // 表单重置
+        handleReset();
+      } else {
+        message.error(`添加文章失败: ${JSON.stringify(response.errorMsg)}`);
+      }
     } catch (err) {
-      message.error(err);
-    } finally {
-      // 表单重置
-      // handleReset();
+      message.error(`添加文章失败: ${err}`);
     }
-  };
+  }, [handleReset]);
 
   return (
     <Card>

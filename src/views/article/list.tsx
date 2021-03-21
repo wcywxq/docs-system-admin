@@ -58,8 +58,7 @@ const ArticleList: FC = () => {
    * @desc 查询
    * @param params
    */
-  const fetchList = useCallback(async () => {
-    const params = form.getFieldsValue();
+  const fetchList = async (params?: any) => {
     setLoading(true);
     try {
       const result = await getArticleList(params);
@@ -69,22 +68,22 @@ const ArticleList: FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [form]);
+  };
 
   /**
    * @desc 查询
    */
-  const onSearch = useCallback(() => {
-    fetchList();
-  }, [fetchList]);
+  const onSearch = (values: any) => {
+    fetchList(values);
+  };
 
   /**
    * @desc 重置
    */
   const onReset = useCallback(() => {
     form.resetFields();
-    fetchList();
-  }, [fetchList, form]);
+    fetchList(form.getFieldsValue());
+  }, [form]);
 
   /**
    * @desc 发布状态切换监听事件
@@ -119,15 +118,15 @@ const ArticleList: FC = () => {
       } catch (err) {
         message.error(err);
       } finally {
-        fetchList();
+        fetchList(form.getFieldsValue());
       }
     },
-    [fetchList]
+    [form]
   );
 
   useEffect(() => {
-    fetchList();
-  }, [fetchList]);
+    fetchList(form.getFieldsValue());
+  }, [form]);
 
   return (
     <Space className="w-full" direction="vertical" size="large">
