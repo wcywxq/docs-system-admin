@@ -11,7 +11,7 @@ const URL = {
  * @desc 获取文章列表
  * @param params 查询参数
  */
-export const getArticleList = (params: any) => request({ url: URL.GET_ARTICLE_LIST, params });
+export const getArticleList = (params?: any) => request({ url: URL.GET_ARTICLE_LIST, params });
 
 /**
  * @desc 添加文章
