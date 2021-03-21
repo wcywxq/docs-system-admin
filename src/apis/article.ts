@@ -3,7 +3,8 @@ import request from '../utils/request';
 const URL = {
     GET_ARTICLE_LIST: '/article/list',
     ADD_ARTICLE: '/article/add',
-    DELETE_ARTICLE: '/article/delete'
+    DELETE_ARTICLE: '/article/delete',
+    UPDATE_STATUS: '/article/update_status'
 };
 
 /**
@@ -23,3 +24,9 @@ export const addArticle = (data: any) => request({ method: "POST", url: URL.ADD_
  * @param data 请求体
  */
 export const deleteArticle = (data: any) => request({ method: "POST", url: URL.DELETE_ARTICLE, data });
+
+/**
+ * @desc 更新文章发布状态
+ * @param data 请求体
+ */
+ export const updateArticleStatus = (data: any) => request({ method: "POST", url: URL.UPDATE_STATUS, data });

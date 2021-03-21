@@ -1,7 +1,7 @@
 import { FC, useState, useCallback, useEffect, Fragment, memo } from "react";
 import { Table, Space, Card, Form, Input, Button, Row, Col, Select, DatePicker, Tag, Switch, Avatar, Popconfirm, notification, message } from "antd";
 import { Link } from "react-router-dom";
-import { deleteArticle, getArticleList } from "../../apis/article";
+import { deleteArticle, getArticleList, updateArticleStatus } from "../../apis/article";
 import dayjs from "dayjs";
 import useSelect from "../../hooks/useSelect";
 import { getTagList } from "../../apis/tag";
@@ -51,6 +51,7 @@ const ArticleList: FC = () => {
   const [form] = useForm();
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState<Array<ArticleModel>>([]);
+  const [statusLoading, setStatusLoading] = useState(false);
   const { options: tagOptions } = useSelect(getTagList);
   const { options: categoryOptions } = useSelect(getCategoryList);
 
@@ -104,15 +105,23 @@ const ArticleList: FC = () => {
    * @param row
    */
   const onSwitchReleaseStatus = useCallback(
-    (val: boolean, row: ArticleModel) => {
-      const newData = [...dataSource];
-      const target = newData.find(item => item.key === row.key);
-      if (target) {
-        target.releaseStatus = val ? 1 : 0;
+    async (val: boolean, row: ArticleModel) => {
+      try {
+        setStatusLoading(true);
+        const response: any = await updateArticleStatus({ id: row.key, status: val ? 1 : 0 });
+        if (response.resultCode === 0) {
+          val ? message.success("文章发布成功") : message.warning("文章已下架");
+          fetchList(form.getFieldsValue());
+        } else {
+          message.error(`变更文章状态失败: ${JSON.stringify(response.errorMsg)}`);
+        }
+      } catch (err) {
+        message.error(`变更文章状态失败: ${err}`);
+      } finally {
+        setStatusLoading(false);
       }
-      setDataSource(newData);
     },
-    [dataSource]
+    [form]
   );
 
   /**
@@ -242,7 +251,7 @@ const ArticleList: FC = () => {
           title="文章发布状态"
           dataIndex="releaseStatus"
           align="center"
-          render={(releaseStatus, row) => <Switch checkedChildren="已发布" unCheckedChildren="未发布" checked={releaseStatus === 1} onChange={checked => onSwitchReleaseStatus(checked, row)} />}
+          render={(releaseStatus, row) => <Switch loading={statusLoading} checked={releaseStatus === 1} onChange={checked => onSwitchReleaseStatus(checked, row)} />}
         />
         <Table.Column<ArticleModel>
           title="文章来源"
