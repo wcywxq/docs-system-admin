@@ -94,10 +94,10 @@ const ArticleAdd: FC = () => {
   /**
    * @desc 表单内容重置
    */
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     form.resetFields();
     uploadThumbUrlRemove();
-  };
+  }, [form]);
 
   /**
    * @desc 提交

@@ -1,4 +1,4 @@
-import { FC, useState, useCallback, useEffect, Fragment } from "react";
+import { FC, useState, useCallback, useEffect, Fragment, memo } from "react";
 import { Table, Space, Card, Form, Input, Button, Row, Col, Select, DatePicker, Tag, Switch, Avatar, Popconfirm, notification, message } from "antd";
 import { Link } from "react-router-dom";
 import { deleteArticle, getArticleList } from "../../apis/article";
@@ -25,7 +25,7 @@ type ArticleModel = {
   author: string;
   desc: string;
   thumbUrl: string;
-  tag: TagModel[];
+  tags: TagModel[];
   category: CategoryModel;
   releaseStatus: 0 | 1; // 0 未发布 1 已发布
   source: 0 | 1; // 0 原创 1 转载
@@ -60,11 +60,23 @@ const ArticleList: FC = () => {
    */
   const fetchList = async (params?: any) => {
     setLoading(true);
+    const query = {} as any;
+    params.title && (query.title = params.title);
+    params.author !== undefined && (query.author = params.author);
+    params.tags !== undefined && params.tags.length && (query.tags = params.tags.join(","));
+    params.category !== undefined && (query.category = params.category);
+    params.releaseStatus !== undefined && (query.releaseStatus = params.releaseStatus);
+    params.source !== undefined && (query.source = params.source);
+    params.createTime !== undefined && params.createTime.length && ([query.createBeginTime, query.createEndTime] = params.createTime.map((time: any) => dayjs(time).valueOf()));
     try {
-      const result = await getArticleList(params);
-      setDataSource(result.data.map((item: any) => ({ ...item, key: item._id })));
+      const response: any = await getArticleList(query);
+      if (response.resultCode === 0) {
+        setDataSource(response.data.map((item: any) => ({ ...item, key: item._id })));
+      } else {
+        message.error(`获取文章列表失败: ${JSON.stringify(response.errorMsg)}`);
+      }
     } catch (err) {
-      notification.error({ message: `获取文章列表失败: ${err}` });
+      message.error({ message: `获取文章列表失败: ${err}` });
     } finally {
       setLoading(false);
     }
@@ -74,6 +86,7 @@ const ArticleList: FC = () => {
    * @desc 查询
    */
   const onSearch = (values: any) => {
+    console.log(values);
     fetchList(values);
   };
 
@@ -148,7 +161,7 @@ const ArticleList: FC = () => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item className="w-full" label="文章标签" name="tag">
+              <Form.Item className="w-full" label="文章标签" name="tags">
                 <Select mode="multiple" showArrow maxTagCount={"responsive" as const} placeholder="请选择文章标签" allowClear>
                   {tagOptions.map(tag => (
                     <Option key={tag._id} value={tag._id}>
@@ -275,4 +288,4 @@ const ArticleList: FC = () => {
   );
 };
 
-export default ArticleList;
+export default memo(ArticleList);
