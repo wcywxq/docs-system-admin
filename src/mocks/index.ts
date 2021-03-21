@@ -12,7 +12,7 @@ const ArticleList = {
       thumbUrl: Random.image("200x100", "#fb0a2a"),
       "tag|3-5": [Random.word(3, 5)],
       category: Random.word(3, 5),
-      "releaseStatus|0-1": Random.boolean() ? 1 : 0,
+      "isPublish|0-1": Random.boolean() ? 1 : 0,
       "source|0-1": Random.boolean() ? 1 : 0,
       createTime: Random.datetime(),
     },

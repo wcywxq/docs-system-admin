@@ -27,7 +27,7 @@ type ArticleModel = {
   thumbUrl: string;
   tags: TagModel[];
   category: CategoryModel;
-  releaseStatus: 0 | 1; // 0 未发布 1 已发布
+  isPublish: 0 | 1; // 0 未发布 1 已发布
   source: 0 | 1; // 0 原创 1 转载
   createTime: Date;
 };
@@ -66,7 +66,7 @@ const ArticleList: FC = () => {
     params.author !== undefined && (query.author = params.author);
     params.tags !== undefined && params.tags.length && (query.tags = params.tags.join(","));
     params.category !== undefined && (query.category = params.category);
-    params.releaseStatus !== undefined && (query.releaseStatus = params.releaseStatus);
+    params.isPublish !== undefined && (query.isPublish = params.isPublish);
     params.source !== undefined && (query.source = params.source);
     params.createTime !== undefined && params.createTime.length && ([query.createBeginTime, query.createEndTime] = params.createTime.map((time: any) => dayjs(time).valueOf()));
     try {
@@ -104,11 +104,11 @@ const ArticleList: FC = () => {
    * @param val
    * @param row
    */
-  const onSwitchReleaseStatus = useCallback(
+  const onSwitchisPublish = useCallback(
     async (val: boolean, row: ArticleModel) => {
       try {
         setStatusLoading(true);
-        const response: any = await updateArticleStatus({ id: row.key, status: val ? 1 : 0 });
+        const response: any = await updateArticleStatus({ id: row.key, isPublish: val ? 1 : 0 });
         if (response.resultCode === 0) {
           val ? message.success("文章发布成功") : message.warning("文章已下架");
           fetchList(form.getFieldsValue());
@@ -192,7 +192,7 @@ const ArticleList: FC = () => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item className="w-full" label="发布状态" name="releaseStatus">
+              <Form.Item className="w-full" label="发布状态" name="isPublish">
                 <Select placeholder="全部" allowClear>
                   <Option value={0}>未发布</Option>
                   <Option value={1}>已发布</Option>
@@ -248,10 +248,10 @@ const ArticleList: FC = () => {
         />
         <Table.Column<ArticleModel> title="文章分类" dataIndex="category" align="center" render={(category: CategoryModel) => <Tag color="blue">{category.name}</Tag>} />
         <Table.Column<ArticleModel>
-          title="文章发布状态"
-          dataIndex="releaseStatus"
+          title="下架/发布"
+          dataIndex="isPublish"
           align="center"
-          render={(releaseStatus, row) => <Switch loading={statusLoading} checked={releaseStatus === 1} onChange={checked => onSwitchReleaseStatus(checked, row)} />}
+          render={(isPublish, row) => <Switch loading={statusLoading} checked={isPublish === 1} onChange={checked => onSwitchisPublish(checked, row)} />}
         />
         <Table.Column<ArticleModel>
           title="文章来源"
