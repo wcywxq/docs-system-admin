@@ -2,6 +2,7 @@ import request from '../utils/request';
 
 const URL = {
     GET_ARTICLE_LIST: '/article/list',
+    GET_ARTICLE_BYID: '/article/item',
     ADD_ARTICLE: '/article/add',
     DELETE_ARTICLE: '/article/delete',
     UPDATE_STATUS: '/article/update_status'
@@ -12,6 +13,12 @@ const URL = {
  * @param params 查询参数
  */
 export const getArticleList = (params?: any) => request({ url: URL.GET_ARTICLE_LIST, params });
+
+/**
+ * @desc 根据 id 获取文章列表
+ * @param id 查询参数
+ */
+export const getArticleById = (params?: any) => request({ url: URL.GET_ARTICLE_BYID, params });
 
 /**
  * @desc 添加文章

@@ -218,7 +218,7 @@ const ArticleList: FC = () => {
         </Form>
       </Card>
       <Table<ArticleModel> bordered dataSource={dataSource} loading={loading} rowKey={record => record.key}>
-        <Table.Column<ArticleModel> title="文章标题" dataIndex="title" align="center" render={(title, row) => <Link to={`/article/detail?id=${row.key}`}>{title}</Link>} />
+        <Table.Column<ArticleModel> title="文章标题" dataIndex="title" align="center" render={(title, row) => <Link to={`/article/detail/${row.key}`}>{title}</Link>} />
         <Table.Column<ArticleModel> title="文章作者" dataIndex="author" align="center" />
         <Table.Column<ArticleModel> title="文章简介" dataIndex="desc" align="center" />
         <Table.Column<ArticleModel> title="封面图" dataIndex="thumbUrl" align="center" render={thumbUrl => <Avatar src={thumbUrl} shape="square" size="large" />} />

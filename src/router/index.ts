@@ -5,6 +5,7 @@ import LoginPage from "../views/login";
 import UserPage from "../views/user";
 import ArticleAdd from "../views/article/add";
 import ArticleList from "../views/article/list";
+import ArticleDetail from "../views/article/detail";
 import CategoryPage from "../views/category";
 import TagPage from "../views/tag";
 import ReviewPage from "../views/review";
@@ -39,6 +40,13 @@ const routes: RouteConfig[] = [
             title: "文章列表",
             component: ArticleList,
             exact: true,
+          },
+          {
+            path: "/article/detail/:id",
+            title: "文章详情",
+            component: ArticleDetail,
+            exact: true,
+            hiddenInMenu: true, // 在菜单中隐藏
           },
           {
             path: "*",

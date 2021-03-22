@@ -55,7 +55,7 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
       if (item.routes) {
         return (
           <SubMenu key={item.path as string} icon={<MailOutlined />} title={item.title}>
-            {renderMenu(item.routes.filter(child => child.path !== "*"))}
+            {renderMenu(item.routes.filter(child => child.path !== "*" && !child.hiddenInMenu))}
           </SubMenu>
         );
       }
@@ -79,7 +79,7 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
         </div>
         {route?.routes && (
           <Menu theme="dark" mode="inline" defaultOpenKeys={defaultOpenKeys} selectedKeys={selectedKeys}>
-            {renderMenu(route.routes.filter(item => item.path !== "*"))}
+            {renderMenu(route.routes.filter(item => item.path !== "*" && !item.hiddenInMenu))}
           </Menu>
         )}
       </Sider>
