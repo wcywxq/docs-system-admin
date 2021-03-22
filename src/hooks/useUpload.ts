@@ -2,9 +2,9 @@ import { useState } from "react";
 import { message } from "antd";
 import { upload } from "../apis/utils";
 import type { RcFile } from "antd/lib/upload";
-import { UploadChangeParam, UploadFile } from "antd/lib/upload/interface";
+import type { UploadChangeParam, UploadFile } from "antd/lib/upload/interface";
 
-export default function useUpload() {
+export default function useUpload({ acceptType, limitSize }: { acceptType: string; limitSize: number }) {
   const [fileList, setFileList] = useState<any[]>([]);
   // 预览图
   const [preview, setPreview] = useState({ visible: false, url: "" });
@@ -45,12 +45,12 @@ export default function useUpload() {
    * @desc 上传前的回调
    */
   const beforeUpload = (file: RcFile) => {
-    const isLt2M = file.size / 1024 / 1024 < 1;
-    if (!file.type.includes("image/")) {
+    const isLt2M = file.size / 1024 / 1024 < limitSize;
+    if (!file.type.includes(acceptType)) {
       message.error("不支持的文件类型!");
     }
     if (!isLt2M) {
-      message.error("上传文件大小不能超过 1MB!");
+      message.error(`上传文件大小不能超过 ${limitSize}MB!`);
     }
     return isLt2M;
   };
