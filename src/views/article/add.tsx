@@ -1,14 +1,14 @@
 import { FC, useCallback, useEffect, useState } from "react";
 import { Card, Form, Input, Select, Upload, message, Button, Row, Col, Space, Modal } from "antd";
 import { ImportOutlined, UploadOutlined, RedoOutlined, CheckOutlined, EyeOutlined } from "@ant-design/icons";
+import axios from "axios";
+import marked from "marked";
+import hljs from "highlight.js";
 import useSelect from "../../hooks/useSelect";
 import { getCategoryList } from "../../apis/category";
 import { getTagList } from "../../apis/tag";
 import { addArticle } from "../../apis/article";
 import useUpload from "../../hooks/useUpload";
-import axios from "axios";
-import marked from "marked";
-import hljs from "highlight.js";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -174,10 +174,9 @@ const ArticleAdd: FC = () => {
                 beforeUpload={contentBeforeUpload}
                 customRequest={contentCustomRequest}
                 fileList={contentList}
-                // showUploadList={false}
                 onRemove={contentUploadRemove}
                 onChange={contentUploadChange}>
-                {contentList.length === 1 ? null : <Button icon={<ImportOutlined />}>导入</Button>}
+                {contentList.length ? null : <Button icon={<ImportOutlined />}>导入</Button>}
               </Upload>
             </Space>
             <Form.Item className="mt-2" label="内容" name="content" rules={[{ required: true, message: "文章内容不能为空!" }]}>
