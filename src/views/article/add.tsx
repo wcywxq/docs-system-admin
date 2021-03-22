@@ -1,12 +1,11 @@
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback } from "react";
 import { Card, Form, Input, Select, Upload, message, Button, Row, Col, Space, Modal } from "antd";
 import { UploadOutlined, RedoOutlined, CheckOutlined } from "@ant-design/icons";
 import useSelect from "../../hooks/useSelect";
 import { getCategoryList } from "../../apis/category";
 import { getTagList } from "../../apis/tag";
-import { upload } from "../../apis/utils";
 import { addArticle } from "../../apis/article";
-import type { RcFile, UploadChangeParam, UploadFile } from "antd/lib/upload/interface";
+import useUpload from "../../hooks/useUpload";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -21,105 +20,51 @@ const ArticleAdd: FC = () => {
   // 标签和分类配置项
   const { options: tagOptions } = useSelect(getTagList);
   const { options: categoryOptions } = useSelect(getCategoryList);
-  // 上传封面图最大上传限制
-  const MAX_COUNT = 1;
-  const [fileList, setFileList] = useState<any[]>([]);
-  const [preview, setPreview] = useState({ visible: false, url: "" });
-
-  /**
-   * @desc 覆盖默认的上传方法
-   */
-  const uploadCustomRequest = (params: any) => {
-    const { file, onSuccess } = params;
-    // 文件读取
-    const reader = new FileReader();
-    reader.readAsDataURL(file as Blob);
-    reader.onload = async () => {
-      // base64 数据
-      const base64Data = reader.result;
-      if (base64Data) {
-        try {
-          // 生成 url
-          const response: any = await upload({ name: file.name, data: base64Data });
-          if (response.resultCode !== 0) throw new Error(`封面图上传失败: ${response.errorMsg}`);
-          // 成功的回调，用来设置返回结构
-          onSuccess(response.data);
-          // 设置可控的 fileList
-          setFileList([{ name: file.name, url: response.data.url }]);
-        } catch (err) {
-          message.error(err);
-        }
-      }
-    };
-    reader.onerror = () => {
-      message.error("封面图上传失败");
-    };
-  };
-
-  /**
-   * @desc 封面图上传前的回调
-   */
-  const uploadThumbUrlBeforeUpload = (file: RcFile) => {
-    const isLt2M = file.size / 1024 / 1024 < 1;
-    if (!file.type.includes("image/")) {
-      message.error("不支持的文件类型!");
-    }
-    if (!isLt2M) {
-      message.error("上传文件大小不能超过 1MB!");
-    }
-    return isLt2M;
-  };
-
-  /**
-   * @desc 图片预览的回调
-   */
-  const uploadThumbUrlPreview = (file: UploadFile<any>) => setPreview({ visible: true, url: file.url ?? "" });
-
-  /**
-   * @desc 图片移除的回调
-   */
-  const uploadThumbUrlRemove = () => setFileList([]);
-
-  /**
-   * @desc 可控 fileList 发生变化的监听
-   */
-  const uploadThumbUrlChange = ({ fileList }: UploadChangeParam<UploadFile<any>>) => setFileList(fileList);
-
-  /**
-   * @desc 图片预览的取消操作
-   */
-  const uploadThumbUrlCancelPreview = () => setPreview({ visible: false, url: "" });
+  const {
+    fileList: thumbUrlList,
+    preview,
+    maxCount,
+    customRequest: thumbUrlCustomRequest,
+    beforeUpload: thumbUrlBeforeUpload,
+    uploadPreview: thumbUrlUploadPreview,
+    uploadRemove: thumbUrlUploadRemove,
+    uploadChange: thumbUrlUploadChange,
+    uploadCancelPreview: thumbUrlUploadCancelPreview
+  } = useUpload();
 
   /**
    * @desc 表单内容重置
    */
   const handleReset = useCallback(() => {
     form.resetFields();
-    uploadThumbUrlRemove();
-  }, [form]);
+    thumbUrlUploadRemove();
+  }, [form, thumbUrlUploadRemove]);
 
   /**
    * @desc 提交
    */
-  const handleSubmit = useCallback(async (values: any) => {
-    const requestBody = {
-      ...values,
-      thumbUrl: values.thumbUrl.file.response.url, // 封面图 url
-      createTime: new Date().getTime() // 创建时间
-    };
-    try {
-      const response: any = await addArticle(requestBody);
-      if (response.resultCode === 0) {
-        message.success('添加文章成功');
-        // 表单重置
-        handleReset();
-      } else {
-        message.error(`添加文章失败: ${JSON.stringify(response.errorMsg)}`);
+  const handleSubmit = useCallback(
+    async (values: any) => {
+      const requestBody = {
+        ...values,
+        thumbUrl: values.thumbUrl.file.response.url, // 封面图 url
+        createTime: new Date().getTime() // 创建时间
+      };
+      try {
+        const response: any = await addArticle(requestBody);
+        if (response.resultCode === 0) {
+          message.success("添加文章成功");
+          // 表单重置
+          handleReset();
+        } else {
+          message.error(`添加文章失败: ${JSON.stringify(response.errorMsg)}`);
+        }
+      } catch (err) {
+        message.error(`添加文章失败: ${err}`);
       }
-    } catch (err) {
-      message.error(`添加文章失败: ${err}`);
-    }
-  }, [handleReset]);
+    },
+    [handleReset]
+  );
 
   return (
     <Card>
@@ -182,14 +127,14 @@ const ArticleAdd: FC = () => {
               <Upload
                 listType="picture-card"
                 accept="image/*"
-                maxCount={MAX_COUNT}
-                beforeUpload={uploadThumbUrlBeforeUpload}
-                customRequest={uploadCustomRequest}
-                fileList={fileList}
-                onPreview={uploadThumbUrlPreview}
-                onRemove={uploadThumbUrlRemove}
-                onChange={uploadThumbUrlChange}>
-                {fileList.length === 1 ? null : (
+                maxCount={maxCount}
+                beforeUpload={thumbUrlBeforeUpload}
+                customRequest={thumbUrlCustomRequest}
+                fileList={thumbUrlList}
+                onPreview={thumbUrlUploadPreview}
+                onRemove={thumbUrlUploadRemove}
+                onChange={thumbUrlUploadChange}>
+                {thumbUrlList.length === 1 ? null : (
                   <div>
                     <UploadOutlined />
                     <div className="mt-2">封面图</div>
@@ -213,7 +158,7 @@ const ArticleAdd: FC = () => {
         </Row>
       </Form>
       {/* 上传封面图图片预览 */}
-      <Modal visible={preview.visible} title={null} footer={null} onCancel={uploadThumbUrlCancelPreview}>
+      <Modal visible={preview.visible} title={null} footer={null} onCancel={thumbUrlUploadCancelPreview}>
         <img alt="example" className="w-full" src={preview.url} />
       </Modal>
     </Card>
