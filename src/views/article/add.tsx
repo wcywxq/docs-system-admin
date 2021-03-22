@@ -210,7 +210,7 @@ const ArticleAdd: FC = () => {
                 onPreview={thumbUrlUploadPreview}
                 onRemove={thumbUrlUploadRemove}
                 onChange={thumbUrlUploadChange}>
-                {thumbUrlList.length === 1 ? null : (
+                {thumbUrlList.length ? null : (
                   <div>
                     <UploadOutlined />
                     <div className="mt-2">封面图</div>
