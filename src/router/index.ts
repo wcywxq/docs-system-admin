@@ -78,24 +78,28 @@ const routes: RouteConfig[] = [
         path: "/exception",
         title: "异常页",
         component: RouteView,
+        hiddenInMenu: true,
         routes: [
           {
             path: "/exception/403",
             title: "403",
             component: ForbiddenPage,
-            exact: true
+            exact: true,
+            hiddenInMenu: true,
           },
           {
             path: "/exception/404",
             title: "404",
             component: NotFoundPage,
-            exact: true
+            exact: true,
+            hiddenInMenu: true,
           },
           {
             path: "/exception/500",
             title: "500",
             component: ServerErrorPage,
-            exact: true
+            exact: true,
+            hiddenInMenu: true,
           },
           {
             path: "*",
