@@ -3,7 +3,6 @@ import { Row, Col } from "antd";
 import marked from "marked";
 import hljs from "highlight.js";
 import TocLink from "./TocLink";
-import "./RenderMarkdown.scss";
 
 type TProps = {
   content: string;
@@ -37,11 +36,11 @@ const RenderMarkdown: React.FC<TProps> = props => {
 
   return (
     <Row gutter={[16, 0]}>
-      <Col flex={1}>
+      <Col span={20}>
         <p className="markdown" dangerouslySetInnerHTML={{ __html: marked(content) }}></p>
       </Col>
-      <Col className="w-64">
-        <div className="fixed w-64">{tocLink && tocLink.render()}</div>
+      <Col span={4}>
+        <div>{tocLink && tocLink.render()}</div>
       </Col>
     </Row>
   );
