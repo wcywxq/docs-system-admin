@@ -83,13 +83,13 @@ export default class TocLink {
       href: string;
     }
   ) {
-    e.preventDefault();
-    if (link.href) {
-      // 找到锚点对应得的节点
-      let element = document.getElementById(link.href);
-      // 若是对应id的锚点存在，就跳滚动到锚点顶部
-      element && element.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
+    // e.preventDefault();
+    // if (link.href) {
+    //   // 找到锚点对应得的节点
+    //   let element = document.getElementById(link.href);
+    //   // 若是对应id的锚点存在，就跳滚动到锚点顶部
+    //   element && element.scrollIntoView({ block: "start", behavior: "smooth" });
+    // }
   }
 
   render() {
