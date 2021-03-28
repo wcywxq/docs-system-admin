@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { Card, message } from "antd";
+import { Spin, Card, message } from "antd";
 import { useParams } from "react-router-dom";
 import { getArticleById } from "../../apis/article";
 import RenderMarkdown from "../../components/RenderMarkdown";
@@ -33,9 +33,11 @@ const ArticleDetail: FC = () => {
   }, [id]);
 
   return (
-    <Card loading={loading}>
-      <RenderMarkdown content={content} />
-    </Card>
+    <Spin tip="Loading..." spinning={loading}>
+      <Card bodyStyle={{ minHeight: "calc(100vh - 64px)" }}>
+        <RenderMarkdown content={content} />
+      </Card>
+    </Spin>
   );
 };
 
