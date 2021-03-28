@@ -1,21 +1,24 @@
-pre {
+.markdown {
+  position: relative;
+  padding: 35px 0;
+}
+.markdown pre {
   border-radius: 6px;
   position: relative;
 }
-code {
+.markdown code:not(.hljs) {
   padding: 2px 5px;
   color: #d56161;
-  border-radius: 2px;
   background: #f6f7f9;
+  border-radius: 2px;
 }
-pre code.hljs {
+.markdown pre code.hljs {
   padding: 1rem;
-  background: #efefef;
 }
-pre code.hljs.html::before,
-pre code.hljs.javascript::before,
-pre code.hljs.bash::before,
-pre code.hljs.css::before {
+.markdown pre code.hljs.html::before,
+.markdown pre code.hljs.javascript::before,
+.markdown pre code.hljs.bash::before,
+.markdown pre code.hljs.css::before {
   font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
   position: absolute;
   top: 0;
@@ -28,32 +31,246 @@ pre code.hljs.css::before {
   height: 15px;
   font-weight: 600;
 }
-pre code.hljs.html::before {
+.markdown pre code.hljs.html::before {
   content: "HTML";
 }
-pre code.hljs.javascript::before {
+.markdown pre code.hljs.javascript::before {
   content: "JavaScript";
 }
-pre code.hljs.bash::before {
+.markdown pre code.hljs.bash::before {
   content: "Shell";
 }
-pre code.hljs.css::before {
+.markdown pre code.hljs.css::before {
   content: "CSS";
 }
-table {
-  tbody > tr > td,
-  thead > tr > th {
-    border-right: 1px solid #e8e8e8;
-    border-bottom: 1px solid #e8e8e8;
-    padding: 8px;
-  }
 
-  tbody > tr > td:first-child,
-  thead > tr > th:first-child {
-    border-left: 1px solid #e8e8e8;
-  }
+.markdown.api > a:first-of-type > h2 {
+  margin-top: 0;
+  padding-top: 0;
+}
 
-  thead > tr > th {
-    border-top: 1px solid #e8e8e8;
-  }
+.markdown.api ul {
+  padding-left: 1.25em;
+  line-height: 1.4em;
+}
+
+.markdown.api ul ul,
+.markdown.api ul p:not(.tip) {
+  padding-bottom: 0;
+  margin: 1.2em 0;
+}
+
+.markdown a.button {
+  font-size: 0.9em;
+  color: #fff;
+  margin: 0.2em 0;
+  width: 200px;
+  text-align: center;
+  padding: 12px 24px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.markdown img {
+  max-width: 100%;
+}
+
+.markdown span.light {
+  color: #4f5959;
+}
+
+.markdown span.info {
+  font-size: 0.85em;
+  display: inline-block;
+  vertical-align: middle;
+  width: 280px;
+  margin-left: 20px;
+}
+
+.markdown h1 {
+  margin: 0 0 1em;
+}
+
+.markdown h2,
+.markdown h3 {
+  pointer-events: none;
+}
+
+.markdown h2 a,
+.markdown h3 a,
+.markdown h2 button,
+.markdown h3 button {
+  pointer-events: auto;
+  color: #273849;
+}
+
+.markdown h2:before,
+.markdown h3:before {
+  content: "";
+  display: block;
+  margin-top: -96px;
+  height: 96px;
+  visibility: hidden;
+}
+
+.markdown h2 {
+  margin: 45px 0 0.8em;
+  padding-bottom: 0.7em;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown h3 {
+  margin: 52px 0 1.2em;
+  line-height: 1.2;
+  position: relative;
+}
+
+.markdown h3 > a:before {
+  content: "#";
+  color: #42b983;
+  position: absolute;
+  left: -0.7em;
+  margin-top: -0.05em;
+  padding-right: 0.5em;
+  font-size: 1.2em;
+  line-height: 1;
+  font-weight: bold;
+}
+
+.markdown figure {
+  margin: 1.2em 0;
+}
+
+.markdown p,
+.markdown ul,
+.markdown ol {
+  line-height: 1.6em;
+  margin: 1.2em 0 -1.2em;
+  padding-bottom: 1.2em;
+  position: relative;
+  z-index: 1;
+}
+
+.markdown ul,
+.markdown ol {
+  padding-left: 1.5em;
+  position: inherit;
+}
+
+.markdown ul ul,
+.markdown ol ul,
+.markdown ul ol,
+.markdown ol ol {
+  margin: 0;
+}
+
+.markdown a {
+  color: #42b983;
+  font-weight: 600;
+}
+
+.markdown blockquote {
+  margin: 2em 0;
+  padding-left: 20px;
+  border-left: 4px solid #42b983;
+}
+
+.markdown blockquote p {
+  font-weight: 600;
+  margin-left: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.markdown iframe {
+  margin: 1em 0;
+}
+
+.markdown > table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  margin: 1.2em auto;
+  padding: 0;
+  display: block;
+  overflow-x: auto;
+}
+
+.markdown > table td,
+.markdown > table th {
+  line-height: 1.5em;
+  padding: 0.4em 0.8em;
+  border: none;
+  border: 1px solid #ddd;
+}
+
+.markdown > table th {
+  font-weight: bold;
+  text-align: left;
+}
+
+.markdown > table th,
+.markdown > table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown > table th code,
+.markdown > table tr:nth-child(2n) code {
+  background-color: #efefef;
+}
+
+.markdown p.tip,
+.markdown p.success {
+  padding: 12px 24px 12px 30px;
+  margin: 2em 0;
+  border-left-width: 4px;
+  border-left-style: solid;
+  background-color: #f8f8f8;
+  position: relative;
+  border-bottom-right-radius: 2px;
+  border-top-right-radius: 2px;
+}
+
+.markdown p.tip:before,
+.markdown p.success:before {
+  position: absolute;
+  top: 14px;
+  left: -12px;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  text-align: center;
+  line-height: 20px;
+  font-weight: bold;
+  font-family: "Dosis", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+}
+
+.markdown p.tip code,
+.markdown p.success code {
+  background-color: #efefef;
+}
+
+.markdown p.tip em,
+.markdown p.success em {
+  color: #304455;
+}
+
+.markdown p.tip {
+  border-left-color: #f66;
+}
+
+.markdown p.tip:before {
+  content: "!";
+  background-color: #f66;
+}
+
+.markdown p.success {
+  border-left-color: #42b983;
+}
+
+.markdown p.success:before {
+  content: "";
+  font-family: FontAwesome;
+  background-color: #42b983;
 }
