@@ -1,3 +1,13 @@
+.pro-sider {
+  @apply fixed left-0 top-0 overflow-auto h-screen #{!important};
+}
+.pro-layout {
+  margin-left: 200px;
+}
 .pro-header {
-    @apply p-0 h-12 bg-white flex items-center #{!important};
+  @apply fixed z-1000 p-0 h-12 bg-white flex items-center #{!important};
+  width: calc(100% - 200px);
+}
+.pro-content {
+  @apply m-4 mt-16 shadow #{!important};
 }

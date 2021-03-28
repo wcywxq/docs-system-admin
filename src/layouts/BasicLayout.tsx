@@ -72,7 +72,7 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider trigger={null} collapsible collapsed={collapse}>
+      <Sider className="pro-sider" trigger={null} collapsible collapsed={collapse}>
         <div className="h-8 m-4 text-white overflow-hidden">
           <img className="h-full" src={logo} alt="" />
           <span>{!collapse && "Notice Admin"}</span>
@@ -83,14 +83,14 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
           </Menu>
         )}
       </Sider>
-      <Layout>
+      <Layout className="pro-layout">
         <Header className="pro-header">
           <span className="px-4 cursor-pointer" onClick={handleCollapse}>
             {collapse ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </span>
           <Breadcrumb>{breadcrumbItems}</Breadcrumb>
         </Header>
-        <Content className="m-4">
+        <Content className="pro-content">
           <RouteView {...props} />
         </Content>
       </Layout>
