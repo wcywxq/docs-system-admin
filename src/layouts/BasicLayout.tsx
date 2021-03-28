@@ -83,8 +83,8 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
           </Menu>
         )}
       </Sider>
-      <Layout className="pro-layout">
-        <Header className="pro-header">
+      <Layout className="pro-layout" style={{ marginLeft: collapse ? "80px" : "200px" }}>
+        <Header className="pro-header" style={{ width: collapse ? "calc(100% - 80px)" : "calc(100% - 200px)" }}>
           <span className="px-4 cursor-pointer" onClick={handleCollapse}>
             {collapse ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </span>
