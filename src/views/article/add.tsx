@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useState, memo } from "react";
-import { Card, Form, Input, Select, Upload, message, Button, Row, Col, Space, Modal } from "antd";
+import { Card, Form, Input, Select, Upload, message, Button, Row, Col, Space, Modal, Drawer } from "antd";
 import { ImportOutlined, UploadOutlined, RedoOutlined, CheckOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios";
 import useSelect from "../../hooks/useSelect";
@@ -216,9 +216,9 @@ const ArticleAdd: FC = () => {
         <img alt="example" className="w-full" src={thumbUrlPreview.url} />
       </Modal>
       {/* 上传内容的预览 */}
-      <Modal destroyOnClose visible={preview} width="70%" title="内容预览" footer={null} onCancel={() => setPreview(false)}>
-        <RenderMarkdown content={form.getFieldValue("content")} />
-      </Modal>
+      <Drawer destroyOnClose visible={preview} placement="top" height="100%" title="内容预览" footer={null} onClose={() => setPreview(false)}>
+        <RenderMarkdown content={form.getFieldValue("content") || ""} />
+      </Drawer>
     </Card>
   );
 };

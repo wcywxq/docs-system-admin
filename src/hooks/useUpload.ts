@@ -15,30 +15,33 @@ export default function useUpload({ acceptType, limitSize }: { acceptType: strin
    * @desc 覆盖默认的上传方法
    */
   const customRequest = (params: any) => {
-    const { file, onSuccess } = params;
-    // 文件读取
-    const reader = new FileReader();
-    reader.readAsDataURL(file as Blob);
-    reader.onload = async () => {
-      // base64 数据
-      const base64Data = reader.result;
-      if (base64Data) {
-        try {
+    try {
+      const { file, onSuccess } = params;
+      // 文件读取
+      const reader = new FileReader();
+      reader.readAsDataURL(file as Blob);
+      reader.onload = async () => {
+        // base64 数据
+        const base64Data = reader.result;
+        if (base64Data) {
           // 生成 url
           const response: any = await upload({ name: file.name, data: base64Data });
-          if (response.resultCode !== 0) throw new Error(`封面图上传失败: ${response.errorMsg}`);
-          // 成功的回调，用来设置返回结构
-          onSuccess(response.data);
-          // 设置可控的 fileList
-          setFileList([{ name: file.name, url: response.data.url }]);
-        } catch (err) {
-          message.error(err);
+          if (response.resultCode !== 0) {
+            message.error(response.errorMsg);
+          } else {
+            // 成功的回调，用来设置返回结构
+            onSuccess(response.data);
+            // 设置可控的 fileList
+            setFileList([{ name: file.name, url: response.data.url }]);
+          }
         }
-      }
-    };
-    reader.onerror = () => {
-      message.error("封面图上传失败");
-    };
+      };
+      reader.onerror = () => {
+        message.error("封面图上传失败");
+      };
+    } catch (err) {
+       throw new Error(err);
+    }
   };
 
   /**

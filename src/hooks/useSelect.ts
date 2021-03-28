@@ -19,10 +19,13 @@ export default function useSelect(request: () => Promise<any>) {
     const fetchData = async () => {
       try {
         const { resultCode, errorMsg, data }: ResponseSelectType = await request();
-        if (resultCode !== 0) throw new Error(`初始化数据失败: ${errorMsg}`);
-        data && setOptions(data.map(item => ({ ...item, key: item._id })));
+        if (resultCode !== 0) {
+          message.error(`初始化数据失败: ${errorMsg}`);
+        } else {
+          data && setOptions(data.map(item => ({ ...item, key: item._id })));
+        }
       } catch (error) {
-        message.error(error);
+        throw new Error(error);
       }
     };
     fetchData();
