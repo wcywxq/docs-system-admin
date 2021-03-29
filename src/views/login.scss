@@ -1,0 +1,21 @@
+.pro-login {
+  @apply relative w-full h-screen;
+
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin-left: -48%;
+    background-image: url(../assets/image/login_bg.svg);
+    background-position: 100%;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+    content: "";
+  }
+
+  &-form {
+    @apply mx-auto w-3/4 animate-fade-in-right;
+  }
+}
