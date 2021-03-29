@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { Form, Input, Row, Col, Space, Button, message, notification } from "antd";
 import { EyeTwoTone, EyeInvisibleOutlined } from "@ant-design/icons";
 import bgCover from "../assets/image/login_cover.svg";
@@ -61,6 +61,16 @@ const LoginPage: FC = () => {
     }
   };
 
+  const gotoRegister = useCallback(() => {
+    setVisible(true);
+    loginForm.resetFields();
+  }, [loginForm]);
+
+  const backToLogin = useCallback(() => {
+    setVisible(false);
+    registerForm.resetFields();
+  }, [registerForm]);
+
   return (
     <>
       {/* 登陆
@@ -95,7 +105,7 @@ const LoginPage: FC = () => {
               <Row justify="space-around">
                 <Button>手机登录</Button>
                 <Button>二维码登陆</Button>
-                <Button onClick={() => setVisible(true)}>注册</Button>
+                <Button onClick={gotoRegister}>注册</Button>
               </Row>
             </Form.Item>
           </Form>
@@ -119,7 +129,7 @@ const LoginPage: FC = () => {
               </Button>
             </Form.Item>
             <Form.Item {...tailLayout}>
-              <Button className="w-full" loading={registerLoading} onClick={() => setVisible(false)}>
+              <Button className="w-full" loading={registerLoading} onClick={backToLogin}>
                 返回
               </Button>
             </Form.Item>
