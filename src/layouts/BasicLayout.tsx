@@ -1,8 +1,8 @@
 import { FC, useCallback, useMemo, useState, memo } from "react";
 import { matchRoutes, RouteConfigComponentProps } from "react-router-config";
-import { Layout, Breadcrumb, Menu } from "antd";
-import { MailOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import { Link, useLocation } from "react-router-dom";
+import { Layout, Breadcrumb, Menu, Space, Dropdown } from "antd";
+import { MailOutlined, MenuUnfoldOutlined, MenuFoldOutlined, SettingOutlined, LogoutOutlined } from "@ant-design/icons";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import RouteView from "./RouteView";
 import logo from "../assets/image/logo.svg";
 import "./BasicLayout.scss";
@@ -13,15 +13,12 @@ const { SubMenu } = Menu;
 
 const BasicLayout: FC<RouteConfigComponentProps> = props => {
   const { route } = props;
-
   const { pathname } = useLocation();
-
+  const history = useHistory();
   // 折叠状态控制
   const [collapse, setCollapse] = useState(false);
-
   // 当前激活的菜单的 key
   const selectedKeys = useMemo(() => [pathname], [pathname]);
-
   // 默认匹配的路由
   const routeMatches = useMemo(() => {
     if (route && route.routes) {
@@ -30,10 +27,8 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
     }
     return [];
   }, [pathname, route]);
-
   // 默认打开的菜单的 key
   const defaultOpenKeys = useMemo(() => routeMatches.map(item => item.path as string), [routeMatches]);
-
   // 面包屑子项
   const breadcrumbItems = [
     <Breadcrumb.Item key="home">
@@ -52,7 +47,6 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
       );
     })
   );
-
   // 递归实现菜单渲染
   const renderMenu = (arr: Routes[]) => {
     return arr.map(item => {
@@ -70,9 +64,14 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
       );
     });
   };
-
   // 设置收起展开
   const handleCollapse = useCallback(() => setCollapse(!collapse), [collapse]);
+  // 下拉菜单子项点击监听
+  const onDropDownClick = useCallback(({ key }) => {
+    if (key === "logout") {
+      history.push("/login");
+    }
+  }, [history]);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -89,10 +88,23 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
       </Sider>
       <Layout className="pro-layout" style={{ marginLeft: collapse ? "80px" : "200px" }}>
         <Header className="pro-header" style={{ width: collapse ? "calc(100% - 80px)" : "calc(100% - 200px)" }}>
-          <span className="px-4 cursor-pointer" onClick={handleCollapse}>
-            {collapse ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          </span>
-          <Breadcrumb>{breadcrumbItems}</Breadcrumb>
+          <Space size="large">
+            <span className="cursor-pointer" onClick={handleCollapse}>
+              {collapse ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            </span>
+            <Breadcrumb>{breadcrumbItems}</Breadcrumb>
+          </Space>
+          <Dropdown
+            overlay={
+              <Menu onClick={onDropDownClick}>
+                <Menu.Item key="logout" danger>
+                  <LogoutOutlined />
+                  <span>退出登陆</span>
+                </Menu.Item>
+              </Menu>
+            }>
+            <SettingOutlined className="cursor-pointer" />
+          </Dropdown>
         </Header>
         <Content className="pro-content">
           <RouteView {...props} />
