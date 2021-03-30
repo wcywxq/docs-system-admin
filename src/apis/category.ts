@@ -8,6 +8,7 @@ const URL = {
 
 /**
  * @desc 获取分类列表
+ * @param params 查询参数
  */
 export const getCategoryList = (params?: any) => request({ url: URL.GET_CATEGORY_LIST, params });
 

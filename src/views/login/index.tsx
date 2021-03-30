@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { Form, Input, Row, Col, Space, Button, message, notification } from "antd";
 import { EyeTwoTone, EyeInvisibleOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
@@ -45,11 +45,11 @@ const LoginPage: FC = () => {
       if (response.resultCode !== 0) {
         message.error(`登陆失败: ${response.errorMsg}`);
       } else {
-        history.push("/welcome");
         notification.success({
           message: "欢迎回来👏👏👏",
           description: `当前时间: ${dayjs().format("YYYY-MM-DD HH:mm:ss")}`
         });
+        history.push("/welcome");
       }
     } catch (err) {
       throw new Error(err);
@@ -74,6 +74,13 @@ const LoginPage: FC = () => {
       setRegisterLoading(false);
     }
   };
+
+  useEffect(() => {
+    // 为了解决页面卸载后异步操作修改 state 未结束报错的问题
+    return () => {
+      setLoginLoading(false);
+    }
+  }, []);
 
   return (
     <>

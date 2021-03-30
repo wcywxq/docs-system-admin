@@ -8,6 +8,7 @@ const URL = {
 
 /**
  * @desc 获取标签列表
+ * @param params 查询参数
  */
 export const getTagList = (params?: any) => request({ url: URL.GET_TAG_LIST, params });
 

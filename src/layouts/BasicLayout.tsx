@@ -41,9 +41,12 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
     </Breadcrumb.Item>
   ].concat(
     routeMatches.map(item => {
-      if (item.path === pathname || item.routes) return <Breadcrumb.Item key={item.key}>{item.title}</Breadcrumb.Item>;
+      console.log(item);
+      if (item.path === pathname || item.routes) {
+        return <Breadcrumb.Item key={item.path as string}>{item.title}</Breadcrumb.Item>;
+      }
       return (
-        <Breadcrumb.Item key={item.key}>
+        <Breadcrumb.Item key={item.path as string}>
           <Link to={item.path as string}>{item.title}</Link>
         </Breadcrumb.Item>
       );
