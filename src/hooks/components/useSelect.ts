@@ -12,7 +12,7 @@ type ResponseSelectType = {
  * @param request
  * @returns
  */
-export default function useSelect(request: () => Promise<any>) {
+export function useSelect(request: () => Promise<any>) {
   const [options, setOptions] = useState<any[]>([]);
 
   useEffect(() => {

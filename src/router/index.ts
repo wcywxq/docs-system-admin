@@ -1,7 +1,7 @@
 import { RouteConfig } from "react-router-config";
 import BasicLayout from "../layouts/BasicLayout";
 import RouteView from "../layouts/RouteView";
-import LoginPage from "../views/login";
+// import LoginPage from "../views/login";
 import UserPage from "../views/user";
 import ArticleAdd from "../views/article/add";
 import ArticleList from "../views/article/list";
@@ -9,7 +9,7 @@ import ArticleDetail from "../views/article/detail";
 import CategoryPage from "../views/category";
 import TagPage from "../views/tag";
 import ReviewPage from "../views/review";
-import FriendShipPage from "../views/friendPage";
+import FriendShipPage from "../views/firend";
 import ForbiddenPage from "../views/exception/403";
 import NotFoundPage from "../views/exception/404";
 import ServerErrorPage from "../views/exception/500";

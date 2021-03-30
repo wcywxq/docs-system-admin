@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { Card, Form, Row, Col, Button, Space, message, Input, DatePicker, Table, Popconfirm, Modal } from "antd";
-import { getCategoryList, deleteCategory, addCategory } from "../apis/category";
+import { getCategoryList, deleteCategory, addCategory } from "../../apis/category";
 import dayjs from "dayjs";
 
 export type CategoryModel = {

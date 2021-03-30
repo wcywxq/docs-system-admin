@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { message } from "antd";
-import { upload } from "../apis/utils";
+import { upload } from "../../apis/utils";
 import type { RcFile } from "antd/lib/upload";
 import type { UploadChangeParam, UploadFile } from "antd/lib/upload/interface";
 
-export default function useUpload({ acceptType, limitSize }: { acceptType: string; limitSize: number }) {
+export function useUpload({ acceptType, limitSize }: { acceptType: string; limitSize: number }) {
   const [fileList, setFileList] = useState<any[]>([]);
   // 预览图
   const [preview, setPreview] = useState({ visible: false, url: "" });

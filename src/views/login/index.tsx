@@ -1,10 +1,11 @@
 import { FC, useCallback, useState } from "react";
 import { Form, Input, Row, Col, Space, Button, message, notification } from "antd";
 import { EyeTwoTone, EyeInvisibleOutlined } from "@ant-design/icons";
-import bgCover from "../assets/image/login_cover.svg";
-import "./login.scss";
-import { userLogin, userRegister } from "../apis/user";
+import { useHistory } from "react-router-dom";
+import { userLogin, userRegister } from "../../apis/user";
 import dayjs from "dayjs";
+import bgCover from "../../assets/image/login_cover.svg";
+import "./styles/index.scss";
 
 const { Password } = Input;
 
@@ -18,6 +19,7 @@ const tailLayout = {
 };
 
 const LoginPage: FC = () => {
+  const history = useHistory();
   const [visible, setVisible] = useState(false);
   // 登陆相关
   const [loginForm] = Form.useForm();
@@ -26,6 +28,16 @@ const LoginPage: FC = () => {
   const [registerForm] = Form.useForm();
   const [registerLoading, setRegisterLoading] = useState(false);
 
+  const gotoRegister = useCallback(() => {
+    setVisible(true);
+    loginForm.resetFields();
+  }, [loginForm]);
+
+  const backToLogin = useCallback(() => {
+    setVisible(false);
+    registerForm.resetFields();
+  }, [registerForm]);
+
   const onLogin = async (values: any) => {
     setLoginLoading(true);
     try {
@@ -33,6 +45,7 @@ const LoginPage: FC = () => {
       if (response.resultCode !== 0) {
         message.error(`登陆失败: ${response.errorMsg}`);
       } else {
+        history.push("/welcome")
         notification.success({
           message: "欢迎回来👏👏👏",
           description: `当前时间: ${dayjs().format("YYYY-MM-DD HH:mm:ss")}`
@@ -50,9 +63,10 @@ const LoginPage: FC = () => {
     try {
       const response: any = await userRegister(values);
       if (response.resultCode !== 0) {
-        message.error("注册失败!");
+        message.error(`注册失败: ${response.errorMsg}`);
       } else {
-        message.success("注册成功!");
+        message.success("注册成功");
+        backToLogin();
       }
     } catch (err) {
       throw new Error(err);
@@ -60,16 +74,6 @@ const LoginPage: FC = () => {
       setRegisterLoading(false);
     }
   };
-
-  const gotoRegister = useCallback(() => {
-    setVisible(true);
-    loginForm.resetFields();
-  }, [loginForm]);
-
-  const backToLogin = useCallback(() => {
-    setVisible(false);
-    registerForm.resetFields();
-  }, [registerForm]);
 
   return (
     <>
@@ -90,7 +94,7 @@ const LoginPage: FC = () => {
             <Form.Item {...tailLayout}>
               <div className="font-bold text-2xl">登陆</div>
             </Form.Item>
-            <Form.Item label="账号" name="userName" rules={[{ required: true, message: "请输入账号!" }]}>
+            <Form.Item label="账号" name="username" rules={[{ required: true, message: "请输入账号!" }]}>
               <Input placeholder="请输入账号" allowClear />
             </Form.Item>
             <Form.Item label="密码" name="password" rules={[{ required: true, message: "请输入密码!" }]}>
@@ -114,7 +118,7 @@ const LoginPage: FC = () => {
             <Form.Item {...tailLayout}>
               <div className="font-bold text-2xl">{visible ? "注册" : "登陆"}</div>
             </Form.Item>
-            <Form.Item label="账号" name="userName" rules={[{ required: true, message: "请输入账号!" }]}>
+            <Form.Item label="账号" name="username" rules={[{ required: true, message: "请输入账号!" }]}>
               <Input placeholder="请输入账号" allowClear />
             </Form.Item>
             <Form.Item label="密码" name="password" rules={[{ required: true, message: "请输入密码!" }]}>

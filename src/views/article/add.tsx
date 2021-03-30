@@ -2,11 +2,10 @@ import { FC, useCallback, useEffect, useState, memo } from "react";
 import { Card, Form, Input, Select, Upload, message, Button, Row, Col, Space, Modal, Drawer } from "antd";
 import { ImportOutlined, UploadOutlined, RedoOutlined, CheckOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios";
-import useSelect from "../../hooks/useSelect";
+import { useSelect, useUpload } from "../../hooks/components";
 import { getCategoryList } from "../../apis/category";
 import { getTagList } from "../../apis/tag";
 import { addArticle } from "../../apis/article";
-import useUpload from "../../hooks/useUpload";
 import RenderMarkdown from "../../components/RenderMarkdown";
 
 const { TextArea } = Input;

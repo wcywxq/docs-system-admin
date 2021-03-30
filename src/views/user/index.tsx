@@ -19,7 +19,7 @@ import axios from "axios";
 interface UserModel {
   key: number | string;
   uid: string;
-  userName: string;
+  username: string;
   avatar: string;
   email: string;
   phone: string;
@@ -105,7 +105,7 @@ const UserPage: FC = () => {
         <Form {...formLayout} form={form} layout="horizontal" onFinish={onSearch}>
           <Row justify="space-between" gutter={[8, 0]}>
             <Col span={8}>
-              <Form.Item className="w-full" label="用户名" name="userName">
+              <Form.Item className="w-full" label="用户名" name="username">
                 <Input placeholder="请输入用户名" />
               </Form.Item>
             </Col>
@@ -148,7 +148,7 @@ const UserPage: FC = () => {
         </Form>
       </Card>
       <Table<UserModel> bordered dataSource={dataSource} loading={loading} rowKey={(record) => record.uid}>
-        <Table.Column<UserModel> title="用户名" dataIndex="userName" align="center"></Table.Column>
+        <Table.Column<UserModel> title="用户名" dataIndex="username" align="center"></Table.Column>
         <Table.Column<UserModel>
           title="用户头像"
           dataIndex="avatar"
@@ -185,7 +185,7 @@ const UserPage: FC = () => {
             <Popconfirm
               title={
                 <span>
-                  确定删除用户<span className="text-danger font-bold">{row.userName}</span>吗?
+                  确定删除用户<span className="text-danger font-bold">{row.username}</span>吗?
                 </span>
               }
               okText="确定"
