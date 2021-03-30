@@ -13,12 +13,24 @@ import FriendShipPage from "../views/firend";
 import ForbiddenPage from "../views/exception/403";
 import NotFoundPage from "../views/exception/404";
 import ServerErrorPage from "../views/exception/500";
+import WelcomePage from "../views/welcome";
 
-const routes: RouteConfig[] = [
+export interface Routes extends RouteConfig {
+  routes?: Routes[];
+  hiddenInMenu?: boolean;
+}
+
+const routes: Routes[] = [
   {
     path: "/",
     component: BasicLayout,
     routes: [
+      {
+        path: "/welcome",
+        title: "首页",
+        component: WelcomePage,
+        hiddenInMenu: true
+      },
       {
         path: "/user",
         title: "用户管理",

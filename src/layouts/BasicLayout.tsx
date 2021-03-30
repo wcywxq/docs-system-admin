@@ -1,11 +1,12 @@
 import { FC, useCallback, useMemo, useState, memo } from "react";
-import { matchRoutes, RouteConfig, RouteConfigComponentProps } from "react-router-config";
+import { matchRoutes, RouteConfigComponentProps } from "react-router-config";
 import { Layout, Breadcrumb, Menu } from "antd";
 import { MailOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import RouteView from "./RouteView";
 import logo from "../assets/image/logo.svg";
 import "./BasicLayout.scss";
+import type { Routes } from "../router";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -50,7 +51,7 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
   );
 
   // 递归实现菜单渲染
-  const renderMenu = (arr: RouteConfig[]) => {
+  const renderMenu = (arr: Routes[]) => {
     return arr.map(item => {
       if (item.routes) {
         return (
