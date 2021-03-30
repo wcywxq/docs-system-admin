@@ -45,7 +45,7 @@ const LoginPage: FC = () => {
       if (response.resultCode !== 0) {
         message.error(`登陆失败: ${response.errorMsg}`);
       } else {
-        history.push("/welcome")
+        history.push("/welcome");
         notification.success({
           message: "欢迎回来👏👏👏",
           description: `当前时间: ${dayjs().format("YYYY-MM-DD HH:mm:ss")}`
@@ -121,11 +121,31 @@ const LoginPage: FC = () => {
             <Form.Item label="账号" name="username" rules={[{ required: true, message: "请输入账号!" }]}>
               <Input placeholder="请输入账号" allowClear />
             </Form.Item>
-            <Form.Item label="密码" name="password" rules={[{ required: true, message: "请输入密码!" }]}>
+            <Form.Item label="密码" name="password" rules={[{ required: true, message: "请输入密码" }]}>
               <Password placeholder="请输入密码" allowClear iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
             </Form.Item>
-            <Form.Item label="确认密码" name="confirmPassword" rules={[{ required: true, message: "请确认密码!" }]}>
-              <Password placeholder="请确认密码" allowClear iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
+            <Form.Item
+              label="确认密码"
+              name="confirmPassword"
+              rules={[
+                {
+                  required: true,
+                  validator: (_, value, callback) => {
+                    const password = registerForm.getFieldValue("password");
+                    try {
+                      if (!value) throw new Error("请输入确认密码");
+                      if (!password) throw new Error("请先输入密码");
+                      if (password !== value) {
+                        throw new Error("两次输入的密码不一致");
+                      }
+                      callback();
+                    } catch (err) {
+                      callback(err);
+                    }
+                  }
+                }
+              ]}>
+              <Password placeholder="请再次确认密码" allowClear iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
             </Form.Item>
             <Form.Item {...tailLayout}>
               <Button className="w-full" loading={registerLoading} type="primary" htmlType="submit">
