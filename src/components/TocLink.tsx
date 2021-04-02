@@ -76,25 +76,27 @@ export default class TocLink {
   }
 
   // 滚动效果，组织默认路由切换（对于长列表的toc需额外配置，暂时用css处理）
-  //   handleClick(
-  //     e: React.MouseEvent<HTMLElement>,
-  //     link: {
-  //       title: React.ReactNode;
-  //       href: string;
-  //     }
-  //   ) {
-  //     e.preventDefault();
-  //     if (link.href) {
-  //       // 找到锚点对应得的节点
-  //       let element = document.getElementById(link.href);
-  //       // 若是对应id的锚点存在，就跳滚动到锚点顶部
-  //       element && element.scrollIntoView({ block: "start", behavior: "smooth" });
-  //     }
-  //   }
+  handleClick(
+    e: React.MouseEvent<HTMLElement>,
+    link: {
+      title: React.ReactNode;
+      href: string;
+    }
+  ) {
+    e.preventDefault();
+    console.log(link);
+    if (link.href) {
+      // 找到锚点对应得的节点，href 对应的值默认都包含 # 哈希，因此取其后面的
+      let element = document.getElementById(link.href.slice(1));
+      console.log(element, link.href);
+      // 若是对应id的锚点存在，就跳滚动到锚点顶部
+      element && element.scrollIntoView({ block: "start", behavior: "smooth" });
+    }
+  }
 
   render() {
     return (
-      <Anchor offsetTop={48} affix showInkInFixed>
+      <Anchor offsetTop={48} affix showInkInFixed onClick={this.handleClick}>
         {this.renderToc(this.tocItems)}
       </Anchor>
     );
