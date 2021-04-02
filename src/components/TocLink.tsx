@@ -88,7 +88,6 @@ export default class TocLink {
     if (link.href) {
       // 找到锚点对应得的节点，href 对应的值默认都包含 # 哈希，因此取其后面的
       let element = document.getElementById(link.href.slice(1));
-      console.log(element, link.href);
       // 若是对应id的锚点存在，就跳滚动到锚点顶部
       element && element.scrollIntoView({ block: "start", behavior: "smooth" });
     }
