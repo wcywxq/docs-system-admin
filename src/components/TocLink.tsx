@@ -95,7 +95,7 @@ export default class TocLink {
 
   render() {
     return (
-      <Anchor offsetTop={48} affix showInkInFixed onClick={this.handleClick}>
+      <Anchor offsetTop={1} affix showInkInFixed onClick={this.handleClick} getContainer={() => document.querySelector(".markdown") as any}>
         {this.renderToc(this.tocItems)}
       </Anchor>
     );
