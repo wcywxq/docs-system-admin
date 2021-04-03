@@ -1,7 +1,7 @@
 import { FC, useCallback, useMemo, useState, memo } from "react";
 import { matchRoutes, RouteConfigComponentProps } from "react-router-config";
 import { Layout, Breadcrumb, Menu, Space, Dropdown } from "antd";
-import { MailOutlined, MenuUnfoldOutlined, MenuFoldOutlined, SettingOutlined, LogoutOutlined } from "@ant-design/icons";
+import { MenuUnfoldOutlined, MenuFoldOutlined, SettingOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import RouteView from "./RouteView";
 import logo from "../assets/image/logo.svg";
@@ -51,13 +51,13 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
     return arr.map(item => {
       if (item.routes) {
         return (
-          <SubMenu key={item.path as string} icon={<MailOutlined />} title={item.title}>
+          <SubMenu key={item.path as string} icon={item.icon} title={item.title}>
             {renderMenu(item.routes.filter(child => child.path !== "*" && !child.hiddenInMenu))}
           </SubMenu>
         );
       }
       return (
-        <Menu.Item key={item.path as string} icon={<MailOutlined />}>
+        <Menu.Item key={item.path as string} icon={item.icon}>
           <Link to={item.path as string}>{item.title}</Link>
         </Menu.Item>
       );
