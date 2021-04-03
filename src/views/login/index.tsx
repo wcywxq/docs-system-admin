@@ -45,6 +45,10 @@ const LoginPage: FC = () => {
       if (response.resultCode !== 0) {
         message.error(`登陆失败: ${response.errorMsg}`);
       } else {
+        // 本地存储 token
+        localStorage.setItem("userId", response.data._id);
+        localStorage.setItem("username", response.data.username);
+        localStorage.setItem("access_token", response.data.token);
         notification.success({
           message: "欢迎回来👏👏👏",
           description: `当前时间: ${dayjs().format("YYYY-MM-DD HH:mm:ss")}`

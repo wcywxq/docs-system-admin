@@ -26,6 +26,10 @@ const request = axios.create({
 
 request.interceptors.request.use(
   (config: AxiosRequestConfig) => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      config.headers.access_token = token;
+    }
     return config;
   },
   err => {
@@ -35,6 +39,21 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   (response: AxiosResponse) => {
+    const { resultCode, errorMsg } = response.data;
+
+    // 0 => 请求成功
+    if (resultCode === 0) {
+      console.log(response.data);
+    }
+    // 1 => 请求失败
+    if (resultCode === 1) {
+      console.log(errorMsg);
+    }
+    // -1 => 未登录 or token 过期
+    if (resultCode === -1) {
+      window.location.href = "/login";
+      // 应该清除 cookie，然后在路由守卫处做跳转
+    }
     return response.data;
   },
   err => {
