@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 
 export type TagModel = {
   key: string;
+  _id: string;
   name: string;
   createTime: Date;
 };

@@ -84,7 +84,6 @@ export default class TocLink {
     }
   ) {
     e.preventDefault();
-    console.log(link);
     if (link.href) {
       // 找到锚点对应得的节点，href 对应的值默认都包含 # 哈希，因此取其后面的
       let element = document.getElementById(link.href.slice(1));

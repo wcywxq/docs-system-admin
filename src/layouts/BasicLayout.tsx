@@ -31,12 +31,11 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
   const defaultOpenKeys = useMemo(() => routeMatches.map(item => item.path as string), [routeMatches]);
   // 面包屑子项
   const breadcrumbItems = [
-    <Breadcrumb.Item key="home">
+    <Breadcrumb.Item key="/">
       <Link to="/">首页</Link>
     </Breadcrumb.Item>
   ].concat(
     routeMatches.map(item => {
-      console.log(item);
       if (item.path === pathname || item.routes) {
         return <Breadcrumb.Item key={item.path as string}>{item.title}</Breadcrumb.Item>;
       }
@@ -64,14 +63,15 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
       );
     });
   };
-  // 设置收起展开
-  const handleCollapse = useCallback(() => setCollapse(!collapse), [collapse]);
   // 下拉菜单子项点击监听
-  const onDropDownClick = useCallback(({ key }) => {
-    if (key === "logout") {
-      history.push("/login");
-    }
-  }, [history]);
+  const onDropDownClick = useCallback(
+    ({ key }) => {
+      if (key === "logout") {
+        history.push("/login");
+      }
+    },
+    [history]
+  );
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -86,10 +86,10 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
           </Menu>
         )}
       </Sider>
-      <Layout className="pro-layout" style={{ marginLeft: collapse ? "80px" : "200px" }}>
-        <Header className="pro-header" style={{ width: collapse ? "calc(100% - 80px)" : "calc(100% - 200px)" }}>
+      <Layout className="pro-layout" style={{ marginLeft: `${collapse ? 80 : 200}px` }}>
+        <Header className="pro-header" style={{ width: `calc(100% - ${collapse ? 80: 200}px)` }}>
           <Space size="large">
-            <span className="cursor-pointer" onClick={handleCollapse}>
+            <span className="cursor-pointer" onClick={() => setCollapse(collapse => !collapse)}>
               {collapse ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </span>
             <Breadcrumb>{breadcrumbItems}</Breadcrumb>

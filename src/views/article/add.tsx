@@ -92,7 +92,6 @@ const ArticleAdd: FC = () => {
         const res = await axios(url);
         form.setFieldsValue({ content: res.data });
         message.success("导入内容成功");
-        console.log(form.getFieldsValue());
       } catch (err) {
         message.error("获取导入内容失败!");
       }
@@ -115,7 +114,7 @@ const ArticleAdd: FC = () => {
             <Form.Item label="分类" name="category" rules={[{ required: true, message: "请选择文章分类!" }]}>
               <Select placeholder="请选择文章分类">
                 {categoryOptions.map(cate => (
-                  <Option key={cate._id} value={cate._id}>
+                  <Option key={cate.key} value={cate.key}>
                     {cate.name}
                   </Option>
                 ))}
@@ -131,7 +130,7 @@ const ArticleAdd: FC = () => {
             <Form.Item label="标签" name="tags" rules={[{ required: true, message: "请选择文章标签" }]}>
               <Select mode="multiple" placeholder="请选择选择标签" showArrow>
                 {tagOptions.map(tag => (
-                  <Option key={tag._id} value={tag._id}>
+                  <Option key={tag.key} value={tag.key}>
                     {tag.name}
                   </Option>
                 ))}

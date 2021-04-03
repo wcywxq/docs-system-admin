@@ -58,7 +58,6 @@ const UserPage: FC = () => {
   const fetchList = async (params?: any) => {
     setLoading(true);
     const query = {} as any;
-    console.log(params);
     params.username !== undefined && (query.username = params.username);
     params.email !== undefined && (query.email = params.email);
     params.phone !== undefined && (query.phone = params.phone);

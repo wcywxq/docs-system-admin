@@ -77,7 +77,6 @@ const ArticleList: FC = () => {
    * @desc 查询
    */
   const onSearch = (values: any) => {
-    console.log(values);
     fetchList(values);
   };
 
@@ -122,7 +121,6 @@ const ArticleList: FC = () => {
     async (id: string) => {
       try {
         const response: any = await deleteArticle({ id });
-        console.log(response);
         if (response.resultCode !== 0) {
           message.error(`删除文章失败: ${response.errorMsg.toString()}`);
         }
@@ -228,11 +226,13 @@ const ArticleList: FC = () => {
           align="center"
           render={(tags: TagModel[]) => (
             <Fragment>
-              {tags.map(tag => (
-                <Tag color="blue" key={tag.key}>
-                  {tag.name}
-                </Tag>
-              ))}
+              {tags.map(tag => {
+                return (
+                  <Tag color="blue" key={tag._id}>
+                    {tag.name}
+                  </Tag>
+                );
+              })}
             </Fragment>
           )}
         />
