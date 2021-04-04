@@ -92,9 +92,9 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider className="pro-sider" trigger={null} collapsible collapsed={collapse}>
-        <div className="h-8 m-4 text-white overflow-hidden">
+        <div className="h-8 m-4 space-x-1.5 text-white overflow-hidden">
           <img className="h-full" src={logo} alt="" />
-          <span>{!collapse && "Notice Admin"}</span>
+          <span>{!collapse && "内容管理系统"}</span>
         </div>
         {route?.routes && (
           <Menu theme="dark" mode="inline" defaultOpenKeys={defaultOpenKeys} selectedKeys={selectedKeys}>

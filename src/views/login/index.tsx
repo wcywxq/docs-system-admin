@@ -56,7 +56,7 @@ const LoginPage: FC = () => {
           });
           // 存储到 store
           dispatch(setLoginInfoAction(response.data));
-          history.push("/welcome");
+          history.push("/article/list");
         }
       } catch (err) {
         throw new Error(err);

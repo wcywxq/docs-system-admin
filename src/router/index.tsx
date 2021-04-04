@@ -12,7 +12,6 @@ import FriendShipPage from "../views/firend";
 import ForbiddenPage from "../views/exception/403";
 import NotFoundPage from "../views/exception/404";
 import ServerErrorPage from "../views/exception/500";
-import WelcomePage from "../views/welcome";
 import { UserOutlined, BookOutlined, FileAddOutlined, FileTextOutlined, ShoppingCartOutlined, TagsOutlined, MessageOutlined, LinkOutlined } from "@ant-design/icons";
 
 export interface Routes extends RouteConfig {
@@ -26,12 +25,6 @@ const routes: Routes[] = [
     path: "/",
     component: BasicLayout,
     routes: [
-      {
-        path: "/welcome",
-        title: "首页",
-        component: WelcomePage,
-        hiddenInMenu: true
-      },
       {
         path: "/user",
         title: "用户管理",
