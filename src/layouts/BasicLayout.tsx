@@ -1,7 +1,7 @@
 import { FC, useCallback, useMemo, useState, memo, useEffect } from "react";
 import { matchRoutes, RouteConfigComponentProps } from "react-router-config";
-import { Layout, Breadcrumb, Menu, Space, Dropdown } from "antd";
-import { MenuUnfoldOutlined, MenuFoldOutlined, SettingOutlined, LogoutOutlined } from "@ant-design/icons";
+import { Layout, Breadcrumb, Menu, Space, Dropdown, Modal, message } from "antd";
+import { MenuUnfoldOutlined, MenuFoldOutlined, SettingOutlined, LogoutOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "../hooks/core";
@@ -72,7 +72,17 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
   const onDropDownClick = useCallback(
     ({ key }) => {
       if (key === "logout") {
-        dispatch(clearLoginInfoAction());
+        Modal.confirm({
+          title: "确定退出本系统吗?",
+          icon: <ExclamationCircleOutlined />,
+          okType: "danger",
+          onOk() {
+            dispatch(clearLoginInfoAction());
+          },
+          onCancel() {
+            message.info("取消退出本系统");
+          }
+        });
       }
     },
     [dispatch]
