@@ -4,6 +4,11 @@ import { upload } from "../../apis/utils";
 import type { RcFile } from "antd/lib/upload";
 import type { UploadChangeParam, UploadFile } from "antd/lib/upload/interface";
 
+/**
+ * @desc 上传文件的 hook
+ * @param request
+ * @returns
+ */
 export function useUpload({ acceptType, limitSize }: { acceptType: string; limitSize: number }) {
   const [fileList, setFileList] = useState<any[]>([]);
   // 预览图
