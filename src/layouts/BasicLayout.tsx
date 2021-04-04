@@ -1,12 +1,15 @@
-import { FC, useCallback, useMemo, useState, memo } from "react";
+import { FC, useCallback, useMemo, useState, memo, useEffect } from "react";
 import { matchRoutes, RouteConfigComponentProps } from "react-router-config";
 import { Layout, Breadcrumb, Menu, Space, Dropdown } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined, SettingOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Link, useHistory, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useSelector } from "../hooks/core";
+import { clearLoginInfoAction } from "../redux/actions";
 import RouteView from "./RouteView";
+import type { Routes } from "../router";
 import logo from "../assets/image/logo.svg";
 import "./BasicLayout.scss";
-import type { Routes } from "../router";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -15,10 +18,12 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
   const { route } = props;
   const { pathname } = useLocation();
   const history = useHistory();
+  const dispatch = useDispatch();
+  const loginStore = useSelector(state => state.login);
   // 折叠状态控制
   const [collapse, setCollapse] = useState(false);
   // 当前激活的菜单的 key
-  const selectedKeys = useMemo(() => [pathname], [pathname]);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   // 默认匹配的路由
   const routeMatches = useMemo(() => {
     if (route && route.routes) {
@@ -67,11 +72,22 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
   const onDropDownClick = useCallback(
     ({ key }) => {
       if (key === "logout") {
-        history.push("/login");
+        dispatch(clearLoginInfoAction());
       }
     },
-    [history]
+    [dispatch]
   );
+
+  useEffect(() => {
+    // 初始化选中项
+    setSelectedKeys([pathname]);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!loginStore.token) {
+      history.push("/login");
+    }
+  }, [history, loginStore.token]);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -87,7 +103,7 @@ const BasicLayout: FC<RouteConfigComponentProps> = props => {
         )}
       </Sider>
       <Layout className="pro-layout" style={{ marginLeft: `${collapse ? 80 : 200}px` }}>
-        <Header className="pro-header" style={{ width: `calc(100% - ${collapse ? 80: 200}px)` }}>
+        <Header className="pro-header" style={{ width: `calc(100% - ${collapse ? 80 : 200}px)` }}>
           <Space size="large">
             <span className="cursor-pointer" onClick={() => setCollapse(collapse => !collapse)}>
               {collapse ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}

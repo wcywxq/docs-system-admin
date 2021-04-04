@@ -1,4 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import store from "../redux/store";
+import { clearLoginInfoAction } from "../redux/actions";
 
 type ErrResponseMap = {
   200: string;
@@ -40,6 +42,7 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response: AxiosResponse) => {
     const { resultCode, errorMsg } = response.data;
+    // const dispatch = useDispatch();
 
     // 0 => 请求成功
     if (resultCode === 0) {
@@ -51,8 +54,7 @@ request.interceptors.response.use(
     }
     // -1 => 未登录 or token 过期
     if (resultCode === -1) {
-      window.location.href = "/login";
-      // 应该清除 cookie，然后在路由守卫处做跳转
+      store.dispatch(clearLoginInfoAction())
     }
     return response.data;
   },

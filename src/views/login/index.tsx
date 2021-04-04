@@ -2,8 +2,10 @@ import { FC, useCallback, useEffect, useState } from "react";
 import { Form, Input, Row, Col, Space, Button, message, notification } from "antd";
 import { EyeTwoTone, EyeInvisibleOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
-import { userLogin, userRegister } from "../../apis/user";
+import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
+import { userLogin, userRegister } from "../../apis/user";
+import { setLoginInfoAction } from "../../redux/actions";
 import bgCover from "../../assets/image/login_cover.svg";
 import "./styles/index.scss";
 
@@ -27,6 +29,8 @@ const LoginPage: FC = () => {
   // 注册相关
   const [registerForm] = Form.useForm();
   const [registerLoading, setRegisterLoading] = useState(false);
+  // store
+  const dispatch = useDispatch();
 
   const gotoRegister = useCallback(() => {
     setVisible(true);
@@ -38,29 +42,30 @@ const LoginPage: FC = () => {
     registerForm.resetFields();
   }, [registerForm]);
 
-  const onLogin = async (values: any) => {
-    setLoginLoading(true);
-    try {
-      const response: any = await userLogin(values);
-      if (response.resultCode !== 0) {
-        message.error(`登陆失败: ${response.errorMsg}`);
-      } else {
-        // 本地存储 token
-        localStorage.setItem("userId", response.data._id);
-        localStorage.setItem("username", response.data.username);
-        localStorage.setItem("access_token", response.data.token);
-        notification.success({
-          message: "欢迎回来👏👏👏",
-          description: `当前时间: ${dayjs().format("YYYY-MM-DD HH:mm:ss")}`
-        });
-        history.push("/welcome");
+  const onLogin = useCallback(
+    async (values: any) => {
+      setLoginLoading(true);
+      try {
+        const response: any = await userLogin(values);
+        if (response.resultCode !== 0) {
+          message.error(`登陆失败: ${response.errorMsg}`);
+        } else {
+          notification.success({
+            message: "欢迎回来👏👏👏",
+            description: `当前时间: ${dayjs().format("YYYY-MM-DD HH:mm:ss")}`
+          });
+          // 存储到 store
+          dispatch(setLoginInfoAction(response.data));
+          history.push("/welcome");
+        }
+      } catch (err) {
+        throw new Error(err);
+      } finally {
+        setLoginLoading(false);
       }
-    } catch (err) {
-      throw new Error(err);
-    } finally {
-      setLoginLoading(false);
-    }
-  };
+    },
+    [dispatch, history]
+  );
 
   const onRegister = async (values: any) => {
     setRegisterLoading(true);
@@ -83,7 +88,7 @@ const LoginPage: FC = () => {
     // 为了解决页面卸载后异步操作修改 state 未结束报错的问题
     return () => {
       setLoginLoading(false);
-    }
+    };
   }, []);
 
   return (
@@ -105,7 +110,7 @@ const LoginPage: FC = () => {
             <Form.Item {...tailLayout}>
               <div className="font-bold text-2xl">登陆</div>
             </Form.Item>
-            <Form.Item label="账号" name="username" rules={[{ required: true, message: "请输入账号!" }]}>
+            <Form.Item label="账号" name="userName" rules={[{ required: true, message: "请输入账号!" }]}>
               <Input placeholder="请输入账号" allowClear />
             </Form.Item>
             <Form.Item label="密码" name="password" rules={[{ required: true, message: "请输入密码!" }]}>
@@ -129,7 +134,7 @@ const LoginPage: FC = () => {
             <Form.Item {...tailLayout}>
               <div className="font-bold text-2xl">{visible ? "注册" : "登陆"}</div>
             </Form.Item>
-            <Form.Item label="账号" name="username" rules={[{ required: true, message: "请输入账号!" }]}>
+            <Form.Item label="账号" name="userName" rules={[{ required: true, message: "请输入账号!" }]}>
               <Input placeholder="请输入账号" allowClear />
             </Form.Item>
             <Form.Item label="密码" name="password" rules={[{ required: true, message: "请输入密码" }]}>

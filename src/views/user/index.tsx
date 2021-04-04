@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 interface UserModel {
   key: string;
   uid: string;
-  username: string;
+  userName: string;
   avatar: string;
   email: string;
   phone: string;
@@ -58,7 +58,7 @@ const UserPage: FC = () => {
   const fetchList = async (params?: any) => {
     setLoading(true);
     const query = {} as any;
-    params.username !== undefined && (query.username = params.username);
+    params.userName !== undefined && (query.userName = params.userName);
     params.email !== undefined && (query.email = params.email);
     params.phone !== undefined && (query.phone = params.phone);
     params.isActive !== undefined && (query.isActive = !!params.isActive);
@@ -122,7 +122,7 @@ const UserPage: FC = () => {
         <Form {...formLayout} form={form} layout="horizontal" onFinish={onSearch}>
           <Row justify="space-between" gutter={[8, 0]}>
             <Col span={8}>
-              <Form.Item className="w-full" label="用户名" name="username">
+              <Form.Item className="w-full" label="用户名" name="userName">
                 <Input placeholder="请输入用户名" />
               </Form.Item>
             </Col>
@@ -165,7 +165,7 @@ const UserPage: FC = () => {
         </Form>
       </Card>
       <Table<UserModel> bordered dataSource={dataSource} loading={loading} rowKey={record => record.key}>
-        <Table.Column<UserModel> title="用户名" dataIndex="username" align="center"></Table.Column>
+        <Table.Column<UserModel> title="用户名" dataIndex="userName" align="center"></Table.Column>
         {/* <Table.Column<UserModel>
           title="用户头像"
           dataIndex="avatar"
@@ -194,7 +194,7 @@ const UserPage: FC = () => {
             <Popconfirm
               title={
                 <span>
-                  确定删除用户<span className="text-danger font-bold">{row.username}</span>吗?
+                  确定删除用户<span className="text-danger font-bold">{row.userName}</span>吗?
                 </span>
               }
               okText="确定"

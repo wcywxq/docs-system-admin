@@ -10,9 +10,12 @@ dependencies:
   node: 15.10.0
   react: 17.0.1
   react-dom: 17.0.1_react@17.0.1
+  react-redux: 7.2.3_react@17.0.1+redux@4.0.5
   react-router-config: 5.1.1_react@17.0.1
   react-router-dom: 5.2.0_react@17.0.1
   react-scripts: 4.0.2_6cc24fa016b8f62b0ecd0395605f90a8
+  redux: 4.0.5
+  redux-thunk: 2.3.0
   typescript: 4.2.3
   web-vitals: 1.1.1
 devDependencies:
@@ -2286,6 +2289,14 @@ packages:
     resolution:
       integrity: sha1-STSDh5gwdXBf6PTgL7Z/farsSTQ=
       tarball: '@types/history/download/@types/history-4.7.8.tgz'
+  /@types/hoist-non-react-statics/3.3.1:
+    dependencies:
+      '@types/react': 17.0.3
+      hoist-non-react-statics: 3.3.2
+    dev: false
+    resolution:
+      integrity: sha1-ESSq/lEYy1kZd66xzqrtEHDrA58=
+      tarball: '@types/hoist-non-react-statics/download/@types/hoist-non-react-statics-3.3.1.tgz'
   /@types/html-minifier-terser/5.1.1:
     dev: false
     resolution:
@@ -2369,7 +2380,6 @@ packages:
       integrity: sha1-72UWWuopJMk1kgW/dIhluIgXU8A=
       tarball: '@types/prettier/download/@types/prettier-2.2.3.tgz'
   /@types/prop-types/15.7.3:
-    dev: true
     resolution:
       integrity: sha1-KrDV2i5YFflLC51LldHl8kOrLKc=
       tarball: '@types/prop-types/download/@types/prop-types-15.7.3.tgz'
@@ -2385,6 +2395,16 @@ packages:
     resolution:
       integrity: sha1-NWVM9sSa4WLVvJCEPVQ33DgAjUM=
       tarball: '@types/react-dom/download/@types/react-dom-17.0.2.tgz'
+  /@types/react-redux/7.1.16:
+    dependencies:
+      '@types/hoist-non-react-statics': 3.3.1
+      '@types/react': 17.0.3
+      hoist-non-react-statics: 3.3.2
+      redux: 4.0.5
+    dev: false
+    resolution:
+      integrity: sha1-D70EwlAMEhBUlMg9Sj5FwITjyyE=
+      tarball: '@types/react-redux/download/@types/react-redux-7.1.16.tgz'
   /@types/react-router-config/5.0.2:
     dependencies:
       '@types/history': 4.7.8
@@ -2416,7 +2436,6 @@ packages:
       '@types/prop-types': 15.7.3
       '@types/scheduler': 0.16.1
       csstype: 3.0.7
-    dev: true
     resolution:
       integrity: sha1-um4hU2hQGsOCaVHu8pBFdMJizHk=
       tarball: '@types/react/download/@types/react-17.0.3.tgz'
@@ -2428,7 +2447,6 @@ packages:
       integrity: sha1-8mB00jjgJlnjI84aE9BB7uKA4ZQ=
       tarball: '@types/resolve/download/@types/resolve-0.0.8.tgz'
   /@types/scheduler/0.16.1:
-    dev: true
     resolution:
       integrity: sha1-GIRSBehv8AOFF6q3oYpiprn3EnU=
       tarball: '@types/scheduler/download/@types/scheduler-0.16.1.tgz'
@@ -3402,7 +3420,7 @@ packages:
       tarball: axe-core/download/axe-core-4.1.3.tgz
   /axios/0.21.1:
     dependencies:
-      follow-redirects: 1.13.3
+      follow-redirects: 1.13.3_debug@4.3.1
     dev: false
     resolution:
       integrity: sha1-IlY0gZYvTWvemnbVFu8OXTwJsrg=
@@ -5100,7 +5118,6 @@ packages:
       integrity: sha1-/2ZaDdvcMYZLCWR/NBY0Q9kLCFI=
       tarball: cssstyle/download/cssstyle-2.3.0.tgz
   /csstype/3.0.7:
-    dev: true
     resolution:
       integrity: sha1-Kl+3XhAV6E3RVpL3HomhRQKQlQs=
       tarball: csstype/download/csstype-3.0.7.tgz
@@ -6597,10 +6614,17 @@ packages:
     resolution:
       integrity: sha1-jdfYc6G6vCB9lOrQwuDkQnbr8ug=
       tarball: flush-write-stream/download/flush-write-stream-1.1.1.tgz
-  /follow-redirects/1.13.3:
+  /follow-redirects/1.13.3_debug@4.3.1:
+    dependencies:
+      debug: 4.3.1_supports-color@6.1.0
     dev: false
     engines:
       node: '>=4.0'
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
     resolution:
       integrity: sha1-5VmK1QF0wbxOhyMB6CrCzZf5Amc=
       tarball: follow-redirects/download/follow-redirects-1.13.3.tgz
@@ -6736,6 +6760,8 @@ packages:
     engines:
       node: '>= 4.0'
     optional: true
+    os:
+      - darwin
     requiresBuild: true
     resolution:
       integrity: sha1-8yXLBFVZJCi88Rs4M3DvcOO/zDg=
@@ -7361,26 +7387,30 @@ packages:
     resolution:
       integrity: sha1-AdJwnHnUFpi7AdTezF6dpOSgM9k=
       tarball: http-parser-js/download/http-parser-js-0.5.3.tgz
-  /http-proxy-middleware/0.19.1:
+  /http-proxy-middleware/0.19.1_debug@4.3.1:
     dependencies:
-      http-proxy: 1.18.1
+      http-proxy: 1.18.1_debug@4.3.1
       is-glob: 4.0.1
       lodash: 4.17.21
       micromatch: 3.1.10
     dev: false
     engines:
       node: '>=4.0.0'
+    peerDependencies:
+      debug: '*'
     resolution:
       integrity: sha1-GDx9xKoUeRUDBkmMIQza+WCApDo=
       tarball: http-proxy-middleware/download/http-proxy-middleware-0.19.1.tgz
-  /http-proxy/1.18.1:
+  /http-proxy/1.18.1_debug@4.3.1:
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.13.3
+      follow-redirects: 1.13.3_debug@4.3.1
       requires-port: 1.0.0
     dev: false
     engines:
       node: '>=8.0.0'
+    peerDependencies:
+      debug: '*'
     resolution:
       integrity: sha1-QBVB8FNIhLv5UmAzTnL4juOXZUk=
       tarball: http-proxy/download/http-proxy-1.18.1.tgz
@@ -8306,6 +8336,9 @@ packages:
       node: '>= 10.14.2'
     peerDependencies:
       ts-node: '>=9.0.0'
+    peerDependenciesMeta:
+      ts-node:
+        optional: true
     resolution:
       integrity: sha1-ZPQURO756wPcUdXFO3XIxx9kU0k=
       tarball: jest-config/download/jest-config-26.6.3.tgz
@@ -8497,6 +8530,9 @@ packages:
       node: '>=6'
     peerDependencies:
       jest-resolve: '*'
+    peerDependenciesMeta:
+      jest-resolve:
+        optional: true
     resolution:
       integrity: sha1-twSsCuAoqJEIpNBAs/kZ393I4zw=
       tarball: jest-pnp-resolver/download/jest-pnp-resolver-1.2.2.tgz
@@ -8797,6 +8833,9 @@ packages:
       node: '>=10'
     peerDependencies:
       canvas: ^2.5.0
+    peerDependenciesMeta:
+      canvas:
+        optional: true
     resolution:
       integrity: sha1-TO1rvXt31n+5gOZNnj5vuQD5fdY=
       tarball: jsdom/download/jsdom-16.5.1.tgz
@@ -10765,12 +10804,14 @@ packages:
     resolution:
       integrity: sha1-EA7CNcwVDk/UJRlBJZaihRKg3vU=
       tarball: pkg-up/download/pkg-up-3.1.0.tgz
-  /pnp-webpack-plugin/1.6.4:
+  /pnp-webpack-plugin/1.6.4_typescript@4.2.3:
     dependencies:
-      ts-pnp: 1.2.0
+      ts-pnp: 1.2.0_typescript@4.2.3
     dev: false
     engines:
       node: '>=6'
+    peerDependencies:
+      typescript: '*'
     resolution:
       integrity: sha1-yXEaxNxIpoXauvyG+Lbdn434QUk=
       tarball: pnp-webpack-plugin/download/pnp-webpack-plugin-1.6.4.tgz
@@ -12598,6 +12639,23 @@ packages:
     resolution:
       integrity: sha1-WzUxvXamRaTJ+25pPtNkGeMwEzk=
       tarball: react-is/download/react-is-17.0.1.tgz
+  /react-redux/7.2.3_react@17.0.1+redux@4.0.5:
+    dependencies:
+      '@babel/runtime': 7.13.10
+      '@types/react-redux': 7.1.16
+      hoist-non-react-statics: 3.3.2
+      loose-envify: 1.4.0
+      prop-types: 15.7.2
+      react: 17.0.1
+      react-is: 16.13.1
+      redux: 4.0.5
+    dev: false
+    peerDependencies:
+      react: ^16.8.3 || ^17
+      redux: ^2.0.0 || ^3.0.0 || ^4.0.0-0
+    resolution:
+      integrity: sha1-TAhGGGALsZkBJofankISPMo/C+k=
+      tarball: react-redux/download/react-redux-7.2.3.tgz
   /react-refresh/0.8.3:
     dev: false
     engines:
@@ -12689,7 +12747,7 @@ packages:
       jest-watch-typeahead: 0.6.1_jest@26.6.0
       mini-css-extract-plugin: 0.11.3_webpack@4.44.2
       optimize-css-assets-webpack-plugin: 5.0.4_webpack@4.44.2
-      pnp-webpack-plugin: 1.6.4
+      pnp-webpack-plugin: 1.6.4_typescript@4.2.3
       postcss-flexbugs-fixes: 4.2.1
       postcss-loader: 3.0.0
       postcss-normalize: 8.0.1
@@ -12881,6 +12939,19 @@ packages:
     resolution:
       integrity: sha1-fvh2GijWFJgNwMmC93LJP3qZ3gM=
       tarball: reduce-css-calc/download/reduce-css-calc-2.1.8.tgz
+  /redux-thunk/2.3.0:
+    dev: false
+    resolution:
+      integrity: sha1-UcLBmhhe1Rh6qpotCLZm0NZGdiI=
+      tarball: redux-thunk/download/redux-thunk-2.3.0.tgz
+  /redux/4.0.5:
+    dependencies:
+      loose-envify: 1.4.0
+      symbol-observable: 1.2.0
+    dev: false
+    resolution:
+      integrity: sha1-TbXeWBbheJHeioDEJCMtBvBR2T8=
+      tarball: redux/download/redux-4.0.5.tgz
   /regenerate-unicode-properties/8.2.0:
     dependencies:
       regenerate: 1.4.2
@@ -14473,6 +14544,13 @@ packages:
     resolution:
       integrity: sha1-ttxRHAYzRsnkFbgeQ0ARRbltQWc=
       tarball: svgo/download/svgo-1.3.2.tgz
+  /symbol-observable/1.2.0:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-wiaIrtTqs83C3+rLtWFmBWCgCAQ=
+      tarball: symbol-observable/download/symbol-observable-1.2.0.tgz
   /symbol-tree/3.2.4:
     dev: false
     resolution:
@@ -14786,13 +14864,6 @@ packages:
     resolution:
       integrity: sha1-8shUBoALmw90yfdGW4HqrSQSUvg=
       tarball: tryer/download/tryer-1.0.1.tgz
-  /ts-pnp/1.2.0:
-    dev: false
-    engines:
-      node: '>=6'
-    resolution:
-      integrity: sha1-pQCtCEsHmPHDBxrzkeZZEshrypI=
-      tarball: ts-pnp/download/ts-pnp-1.2.0.tgz
   /ts-pnp/1.2.0_typescript@4.2.3:
     dependencies:
       typescript: 4.2.3
@@ -15404,7 +15475,7 @@ packages:
       del: 4.1.1
       express: 4.17.1
       html-entities: 1.4.0
-      http-proxy-middleware: 0.19.1
+      http-proxy-middleware: 0.19.1_debug@4.3.1
       import-local: 2.0.0
       internal-ip: 4.3.0
       ip: 1.1.5
@@ -15844,6 +15915,11 @@ packages:
     peerDependencies:
       bufferutil: ^4.0.1
       utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
     resolution:
       integrity: sha1-ODvJdCyyAikskHfOq29gR7F/LVk=
       tarball: ws/download/ws-7.4.4.tgz
@@ -15982,9 +16058,12 @@ specifiers:
   postcss: ^7.0.35
   react: ^17.0.1
   react-dom: ^17.0.1
+  react-redux: ^7.2.3
   react-router-config: ^5.1.1
   react-router-dom: ^5.2.0
   react-scripts: 4.0.2
+  redux: ^4.0.5
+  redux-thunk: ^2.3.0
   sass: ^1.32.7
   sass-loader: ^10.1.1
   stylelint: ^13.10.0
