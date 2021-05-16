@@ -26,7 +26,8 @@ import { deleteArticle, getArticleList, updateArticleStatus } from "../../apis/a
 import dayjs from "dayjs";
 import type { TagModel } from "../tag";
 import type { CategoryModel } from "../category";
-import tagHoc from "../../Hoc/tag";
+import valueEnumHoc from "../../Hoc/valueEnum";
+import type { ValueEnumHocProps } from '../../Hoc/valueEnum';
 
 type ArticleModel = {
   _id: Key;
@@ -57,9 +58,7 @@ const formLayout = {
   }
 };
 
-type IProps = Partial<{
-  tagOptions: any[];
-}>;
+type IProps = ValueEnumHocProps;
 
 type IState = {
   loading: boolean;
@@ -102,6 +101,8 @@ class ArticleList extends React.PureComponent<IProps, IState> {
   }
 
   async componentDidMount() {
+    await this.props.request?.tag();
+    await this.props.request?.category();
     await this.fetchList(this.formRef.current?.getFieldsValue());
   }
 
@@ -146,6 +147,7 @@ class ArticleList extends React.PureComponent<IProps, IState> {
   /**
    * @desc 开始编辑
    * @param id
+   * @param value
    */
   onEditArticle(id: Key, value: boolean) {
     const newData = [...this.state.dataSource];
@@ -213,7 +215,7 @@ class ArticleList extends React.PureComponent<IProps, IState> {
                 <Form.Item className="w-full" label="文章标签" name="tags">
                   <Select mode="multiple" showArrow maxTagCount={"responsive" as const} placeholder="请选择文章标签"
                           allowClear>
-                    {this.props.tagOptions?.map(tag => (
+                    {this.props.options?.tag?.map(tag => (
                       <Option key={tag._id} value={tag._id}>
                         {tag.name}
                       </Option>
@@ -224,11 +226,11 @@ class ArticleList extends React.PureComponent<IProps, IState> {
               <Col span={8}>
                 <Form.Item className="w-full" label="文章分类" name="category">
                   <Select placeholder="请选择文章分类" allowClear>
-                    {/*{categoryOptions.map(cate => (*/}
-                    {/*  <Option key={cate.key} value={cate.key}>*/}
-                    {/*    {cate.name}*/}
-                    {/*  </Option>*/}
-                    {/*))}*/}
+                    {this.props.options?.category?.map(cart => (
+                      <Option key={cart._id} value={cart._id}>
+                        {cart.name}
+                      </Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </Col>
@@ -397,4 +399,4 @@ class ArticleList extends React.PureComponent<IProps, IState> {
   }
 }
 
-export default tagHoc(ArticleList);
+export default valueEnumHoc(ArticleList);
