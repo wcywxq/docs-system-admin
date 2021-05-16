@@ -1,20 +1,28 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "esnext",
+    "lib": ["esnext", "dom"],
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "strict": true,
     "allowJs": true,
     "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "paths": {
+      "@/*": ["./src/*"],
+      "@@/*": ["./src/Hoc/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["mock/**/*", "src/**/*", "tests/**/*", "test/**/*", "__test__/**/*", "typings/**/*", "config/**/*", ".eslintrc.js", ".stylelintrc.js", ".prettierrc.js", "jest.config.js", "mock/*"],
+  "exclude": ["node_modules", "build", "dist", "scripts", "webpack", "jest"]
 }

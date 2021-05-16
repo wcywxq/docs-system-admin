@@ -1,21 +1,7 @@
 import React from "react";
-import type { Key } from 'react';
-import {
-  Card,
-  Form,
-  Row,
-  Col,
-  Button,
-  Space,
-  message,
-  Input,
-  DatePicker,
-  Table,
-  Popconfirm,
-  Modal,
-  Typography
-} from "antd";
-import type { FormInstance } from 'antd';
+import type { Key } from "react";
+import { Card, Form, Row, Col, Button, Space, message, Input, DatePicker, Table, Popconfirm, Modal, Typography } from "antd";
+import type { FormInstance } from "antd";
 import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { getTagList, deleteTag, addTag } from "../../apis/tag";
@@ -82,7 +68,7 @@ export default class TagPage extends React.Component<{}, IState> {
     this.state = {
       loading: false,
       dataSource: [],
-      visible: false,
+      visible: false
     };
     this.formRef = React.createRef<FormInstance>();
     this.addFormRef = React.createRef<FormInstance>();
@@ -106,12 +92,12 @@ export default class TagPage extends React.Component<{}, IState> {
       if (response.resultCode !== 0) throw new Error(response.errorMsg);
       this.setState({ dataSource: response.data });
     } catch (err) {
-      message.error('获取标签列表失败');
+      message.error("获取标签列表失败");
       console.log(err);
     } finally {
       this.setState({ loading: false });
     }
-  };
+  }
 
   async onSearch(values: SearchFormType) {
     await this.fetchList(values);
@@ -121,7 +107,6 @@ export default class TagPage extends React.Component<{}, IState> {
     this.formRef.current?.resetFields();
     await this.fetchList(this.formRef.current?.getFieldsValue());
   }
-
 
   /**
    * @desc 删除标签
@@ -133,7 +118,7 @@ export default class TagPage extends React.Component<{}, IState> {
       if (response.resultCode !== 0) throw new Error(response.errorMsg);
       message.success("删除标签成功");
     } catch (err) {
-      message.error('删除标签失败');
+      message.error("删除标签失败");
       console.log(err);
     } finally {
       await this.fetchList(this.formRef.current?.getFieldsValue());
@@ -149,7 +134,7 @@ export default class TagPage extends React.Component<{}, IState> {
       if (response.resultCode !== 0) throw new Error(response.errorMsg);
       message.success("新增标签成功");
     } catch (err) {
-      message.error('新增标签失败');
+      message.error("新增标签失败");
       console.log(err);
     } finally {
       this.setState({ visible: false });
@@ -193,22 +178,24 @@ export default class TagPage extends React.Component<{}, IState> {
         <Button type="primary" onClick={() => this.setState({ visible: true })}>
           新增标签
         </Button>
-        <Table<TagModel> bordered dataSource={this.state.dataSource} loading={this.state.loading}
-                         rowKey={record => record._id}>
+        <Table<TagModel> bordered dataSource={this.state.dataSource} loading={this.state.loading} rowKey={record => record._id}>
           <Table.Column<TagModel> title="标签名" dataIndex="name" align="center" />
-          <Table.Column<TagModel> title="标签创建时间" dataIndex="createTime" align="center"
-                                  render={scope => dayjs(scope).format("YYYY-MM-DD HH:mm:ss")} />
+          <Table.Column<TagModel> title="标签创建时间" dataIndex="createTime" align="center" render={scope => dayjs(scope).format("YYYY-MM-DD HH:mm:ss")} />
           <Table.Column<TagModel>
             title="操作"
             align="center"
             render={(_, row) => (
               <Space>
-                <Button type="link" icon={<FormOutlined />}>编辑</Button>
+                <Button type="link" icon={<FormOutlined />}>
+                  编辑
+                </Button>
                 <Popconfirm
                   title={
                     <Space>
                       <Text>确定删除标签</Text>
-                      <Text type="danger" strong>{row.name}</Text>
+                      <Text type="danger" strong>
+                        {row.name}
+                      </Text>
                       <Text>吗?</Text>
                     </Space>
                   }
@@ -224,8 +211,7 @@ export default class TagPage extends React.Component<{}, IState> {
           />
         </Table>
         {/* 新增标签的表单弹窗 */}
-        <Modal destroyOnClose title="新增标签" visible={this.state.visible}
-               onCancel={() => this.setState({ visible: false })} footer={null}>
+        <Modal destroyOnClose title="新增标签" visible={this.state.visible} onCancel={() => this.setState({ visible: false })} footer={null}>
           <Form ref={this.addFormRef} {...addFormLayout} onFinish={values => this.onSubmit(values)}>
             <Form.Item className="w-full" label="标签名称" name="name" rules={[{ required: true, message: "标签名称不能为空!" }]}>
               <Input placeholder="请输入标签名称" />

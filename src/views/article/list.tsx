@@ -1,33 +1,15 @@
 import React from "react";
-import type { Key } from 'react';
-import {
-  Table,
-  Space,
-  Card,
-  Form,
-  Input,
-  Button,
-  Row,
-  Col,
-  Select,
-  DatePicker,
-  Tag,
-  Switch,
-  Avatar,
-  Popconfirm,
-  message,
-  Typography,
-  Badge
-} from "antd";
-import type { FormInstance } from 'antd';
+import type { Key } from "react";
+import { Table, Space, Card, Form, Input, Button, Row, Col, Select, DatePicker, Tag, Switch, Avatar, Popconfirm, message, Typography, Badge } from "antd";
+import type { FormInstance } from "antd";
 import { Link } from "react-router-dom";
 import { DeleteOutlined, FormOutlined, CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { deleteArticle, getArticleList, updateArticleStatus } from "../../apis/article";
 import dayjs from "dayjs";
 import type { TagModel } from "../tag";
 import type { CategoryModel } from "../category";
-import valueEnumHoc from "../../Hoc/valueEnum";
-import type { ValueEnumHocProps } from '../../Hoc/valueEnum';
+import valueEnumHoc from "@@/valueEnum";
+import type { ValueEnumHocProps } from "@@/valueEnum";
 
 type ArticleModel = {
   _id: Key;
@@ -121,7 +103,7 @@ class ArticleList extends React.PureComponent<IProps, IState> {
       if (response.resultCode !== 0) throw new Error(response.errorMsg);
       this.setState({ dataSource: response.data });
     } catch (err) {
-      message.error('获取文章列表失败');
+      message.error("获取文章列表失败");
       console.log(err);
     } finally {
       this.setState({ loading: false });
@@ -168,7 +150,7 @@ class ArticleList extends React.PureComponent<IProps, IState> {
       if (response.resultCode !== 0) throw new Error(response.errorMsg);
       message.success("删除文章成功");
     } catch (err) {
-      message.error('删除文章失败');
+      message.error("删除文章失败");
       console.log(err);
     } finally {
       await this.fetchList(this.formRef.current?.getFieldsValue());
@@ -213,8 +195,7 @@ class ArticleList extends React.PureComponent<IProps, IState> {
               </Col>
               <Col span={8}>
                 <Form.Item className="w-full" label="文章标签" name="tags">
-                  <Select mode="multiple" showArrow maxTagCount={"responsive" as const} placeholder="请选择文章标签"
-                          allowClear>
+                  <Select mode="multiple" showArrow maxTagCount={"responsive" as const} placeholder="请选择文章标签" allowClear>
                     {this.props.options?.tag?.map(tag => (
                       <Option key={tag._id} value={tag._id}>
                         {tag.name}
@@ -270,72 +251,54 @@ class ArticleList extends React.PureComponent<IProps, IState> {
             </Row>
           </Form>
         </Card>
-        <Table<ArticleModel>
-          bordered
-          size="small"
-          dataSource={this.state.dataSource}
-          loading={this.state.loading}
-          rowKey={record => record._id}
-        >
-          <Table.Column<ArticleModel>
-            title="文章标题"
-            dataIndex="title"
-            align="center"
-            render={(scope: string, row) => <Link to={`/article/detail/${row._id}`}>{scope}</Link>}
-          />
-          <Table.Column<ArticleModel>
-            title="文章作者"
-            dataIndex="author"
-            align="center"
-          />
-          <Table.Column<ArticleModel>
-            title="文章简介"
-            dataIndex="desc"
-            align="center"
-          />
-          <Table.Column<ArticleModel>
-            title="封面图"
-            dataIndex="thumbUrl"
-            align="center"
-            render={(scope: string) => <Avatar src={scope} shape="square" size="large" />}
-          />
+        <Table<ArticleModel> bordered size="small" dataSource={this.state.dataSource} loading={this.state.loading} rowKey={record => record._id}>
+          <Table.Column<ArticleModel> title="文章标题" dataIndex="title" align="center" render={(scope: string, row) => <Link to={`/article/detail/${row._id}`}>{scope}</Link>} />
+          <Table.Column<ArticleModel> title="文章作者" dataIndex="author" align="center" />
+          <Table.Column<ArticleModel> title="文章简介" dataIndex="desc" align="center" />
+          <Table.Column<ArticleModel> title="封面图" dataIndex="thumbUrl" align="center" render={(scope: string) => <Avatar src={scope} shape="square" size="large" />} />
           <Table.Column<ArticleModel>
             title="文章标签"
             dataIndex="tags"
             align="center"
             render={(tags: TagModel[]) => (
               <React.Fragment>
-                {tags.map(tag => <Tag color="blue" key={tag._id}>{tag.name}</Tag>)}
+                {tags.map(tag => (
+                  <Tag color="blue" key={tag._id}>
+                    {tag.name}
+                  </Tag>
+                ))}
               </React.Fragment>
             )}
           />
-          <Table.Column<ArticleModel>
-            title="文章分类"
-            dataIndex="category"
-            align="center"
-            render={(_, row) => <Tag color="blue">{row.category.name}</Tag>}
-          />
+          <Table.Column<ArticleModel> title="文章分类" dataIndex="category" align="center" render={(_, row) => <Tag color="blue">{row.category.name}</Tag>} />
           <Table.Column<ArticleModel>
             title="下架/发布"
             dataIndex="isPublish"
             align="center"
             render={(scope: 0 | 1, row) => {
-              const valueEnum: Record<0 | 1, { text: string; status?: "warning" | "success" | "default" | "processing" | "error"; color: string; }> = {
-                0: { text: '已下架', status: 'error', color: 'error' },
-                1: { text: '已发布', status: 'success', color: 'success' },
+              const valueEnum: Record<0 | 1, { text: string; status?: "warning" | "success" | "default" | "processing" | "error"; color: string }> = {
+                0: { text: "已下架", status: "error", color: "error" },
+                1: { text: "已发布", status: "success", color: "success" }
               };
-              const defaultRender = valueEnum[scope] ?
-                <Tag color={valueEnum[scope].color}><Badge status={valueEnum[scope].status} />{valueEnum[scope].text}
-                </Tag> : null;
-              const editRender = <Switch checked={!!row.isPublish} onChange={checked => {
-                const newData = [...this.state.dataSource];
-                const target = newData.find(item => item._id === row._id);
-                if (target) {
-                  target.isPublish = checked ? 1 : 0;
-                  this.setState({ dataSource: newData });
-                }
-              }
-              } />;
+              const defaultRender = valueEnum[scope] ? (
+                <Tag color={valueEnum[scope].color}>
+                  <Badge status={valueEnum[scope].status} />
+                  {valueEnum[scope].text}
+                </Tag>
+              ) : null;
+              const editRender = (
+                <Switch
+                  checked={!!row.isPublish}
+                  onChange={checked => {
+                    const newData = [...this.state.dataSource];
+                    const target = newData.find(item => item._id === row._id);
+                    if (target) {
+                      target.isPublish = checked ? 1 : 0;
+                      this.setState({ dataSource: newData });
+                    }
+                  }}
+                />
+              );
               return row.editable ? editRender : defaultRender;
             }}
           />
@@ -345,18 +308,13 @@ class ArticleList extends React.PureComponent<IProps, IState> {
             align="center"
             render={(scope: 0 | 1) => {
               const valueEnum = {
-                0: { text: '转载', color: 'orange' },
-                1: { text: '原创', color: 'purple' },
+                0: { text: "转载", color: "orange" },
+                1: { text: "原创", color: "purple" }
               };
               return valueEnum[scope] ? <Tag color={valueEnum[scope].color}>{valueEnum[scope].text}</Tag> : null;
             }}
           />
-          <Table.Column<ArticleModel>
-            title="文章创建时间"
-            dataIndex="createTime"
-            align="center"
-            render={scope => dayjs(scope).format("YYYY-MM-DD HH:mm:ss")}
-          />
+          <Table.Column<ArticleModel> title="文章创建时间" dataIndex="createTime" align="center" render={scope => dayjs(scope).format("YYYY-MM-DD HH:mm:ss")} />
           <Table.Column<ArticleModel>
             title="操作"
             align="center"
@@ -364,20 +322,25 @@ class ArticleList extends React.PureComponent<IProps, IState> {
               <Space>
                 {row.editable ? (
                   <React.Fragment>
-                    <Button style={{ color: '#389e0d' }} type="link" icon={<CheckCircleOutlined />}
-                            onClick={() => this.onOkArticle(row)}>确定</Button>
-                    <Button style={{ color: '#d46b08' }} type="link" icon={<CloseCircleOutlined />}
-                            onClick={() => this.onCancelArticle(row)}>取消</Button>
+                    <Button style={{ color: "#389e0d" }} type="link" icon={<CheckCircleOutlined />} onClick={() => this.onOkArticle(row)}>
+                      确定
+                    </Button>
+                    <Button style={{ color: "#d46b08" }} type="link" icon={<CloseCircleOutlined />} onClick={() => this.onCancelArticle(row)}>
+                      取消
+                    </Button>
                   </React.Fragment>
                 ) : (
                   <React.Fragment>
-                    <Button type="link" icon={<FormOutlined />}
-                            onClick={() => this.onEditArticle(row._id, true)}>编辑</Button>
+                    <Button type="link" icon={<FormOutlined />} onClick={() => this.onEditArticle(row._id, true)}>
+                      编辑
+                    </Button>
                     <Popconfirm
                       title={
                         <Space>
                           <Text>确定删除文章</Text>
-                          <Text type="danger" strong>{row.title}</Text>
+                          <Text type="danger" strong>
+                            {row.title}
+                          </Text>
                           <Text>吗?</Text>
                         </Space>
                       }

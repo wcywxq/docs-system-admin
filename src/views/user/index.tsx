@@ -1,22 +1,7 @@
-import React from 'react';
-import type { Key } from 'react';
-import {
-  Table,
-  Space,
-  Card,
-  Form,
-  Input,
-  Button,
-  Row,
-  Col,
-  Select,
-  DatePicker,
-  Switch,
-  Popconfirm,
-  message,
-  Typography,
-} from "antd";
-import type { FormInstance } from 'antd';
+import React from "react";
+import type { Key } from "react";
+import { Table, Space, Card, Form, Input, Button, Row, Col, Select, DatePicker, Switch, Popconfirm, message, Typography } from "antd";
+import type { FormInstance } from "antd";
 import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { getUserList, deleteUser } from "../../apis/user";
@@ -103,12 +88,12 @@ export default class UserPage extends React.Component<{}, IState> {
       if (response.resultCode !== 0) throw new Error(response.errorMsg);
       this.setState({ dataSource: response.data });
     } catch (err) {
-      message.error('获取用户列表失败');
+      message.error("获取用户列表失败");
       console.log(err);
     } finally {
       this.setState({ loading: false });
     }
-  };
+  }
 
   /**
    * @desc 搜索表单提交
@@ -135,9 +120,9 @@ export default class UserPage extends React.Component<{}, IState> {
     const target = newDataSource.find(item => item.uid === row.uid);
     if (target) {
       target.isActive = val;
-      this.setState({ dataSource: newDataSource })
+      this.setState({ dataSource: newDataSource });
     }
-  };
+  }
 
   /**
    * @desc 删除用户
@@ -147,10 +132,10 @@ export default class UserPage extends React.Component<{}, IState> {
     try {
       const response: any = await deleteUser({ id });
       if (response.resultCode !== 0) throw new Error(response.errorMsg);
-      message.success('删除用户成功');
+      message.success("删除用户成功");
       await this.fetchList(this.formRef.current?.getFieldsValue());
     } catch (err) {
-      message.error('删除用户失败')
+      message.error("删除用户失败");
       console.log(err);
     }
   }
@@ -159,7 +144,7 @@ export default class UserPage extends React.Component<{}, IState> {
     return (
       <Space className="w-full" direction="vertical" size="large">
         <Card>
-          <Form ref={this.formRef} {...formLayout} layout="horizontal" onFinish={(values) => this.onSearch(values)}>
+          <Form ref={this.formRef} {...formLayout} layout="horizontal" onFinish={values => this.onSearch(values)}>
             <Row justify="space-between" gutter={[8, 0]}>
               <Col span={8}>
                 <Form.Item className="w-full" label="用户名" name="userName">
@@ -204,11 +189,7 @@ export default class UserPage extends React.Component<{}, IState> {
             </Row>
           </Form>
         </Card>
-        <Table<UserModel>
-          bordered dataSource={this.state.dataSource}
-          loading={this.state.loading}
-          rowKey={record => record._id}
-        >
+        <Table<UserModel> bordered dataSource={this.state.dataSource} loading={this.state.loading} rowKey={record => record._id}>
           <Table.Column<UserModel> title="用户名" dataIndex="userName" align="center" />
           <Table.Column<UserModel> title="邮箱" dataIndex="email" align="center" />
           <Table.Column<UserModel> title="手机号码" dataIndex="phone" align="center" />
@@ -216,29 +197,17 @@ export default class UserPage extends React.Component<{}, IState> {
             title="激活账号"
             dataIndex="isActive"
             align="center"
-            render={
-              (isActive, row) => (
-                <Switch
-                  checkedChildren="激活"
-                  unCheckedChildren="关闭"
-                  checked={isActive}
-                  onChange={checked => this.onSwitchActive(checked, row)}
-                />
-              )
-            }
+            render={(isActive, row) => <Switch checkedChildren="激活" unCheckedChildren="关闭" checked={isActive} onChange={checked => this.onSwitchActive(checked, row)} />}
           />
-          <Table.Column<UserModel>
-            title="注册时间"
-            dataIndex="createTime"
-            align="center"
-            render={createTime => dayjs(createTime).format("YYYY-MM-DD HH:mm:ss")}
-          />
+          <Table.Column<UserModel> title="注册时间" dataIndex="createTime" align="center" render={createTime => dayjs(createTime).format("YYYY-MM-DD HH:mm:ss")} />
           <Table.Column<UserModel>
             title="操作"
             align="center"
             render={(_, row) => (
               <React.Fragment>
-                <Button type="link" icon={<FormOutlined />}>编辑</Button>
+                <Button type="link" icon={<FormOutlined />}>
+                  编辑
+                </Button>
                 <Popconfirm
                   title={
                     <Space>
@@ -255,10 +224,10 @@ export default class UserPage extends React.Component<{}, IState> {
                   </Button>
                 </Popconfirm>
               </React.Fragment>
-            )} />
+            )}
+          />
         </Table>
       </Space>
-    )
+    );
   }
 }
-

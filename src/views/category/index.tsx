@@ -1,22 +1,8 @@
 import React from "react";
-import type { Key } from 'react';
-import {
-  Card,
-  Form,
-  Row,
-  Col,
-  Button,
-  Space,
-  message,
-  Input,
-  DatePicker,
-  Table,
-  Popconfirm,
-  Modal,
-  Typography
-} from "antd";
-import type { FormInstance } from 'antd';
-import { FormOutlined, DeleteOutlined } from '@ant-design/icons';
+import type { Key } from "react";
+import { Card, Form, Row, Col, Button, Space, message, Input, DatePicker, Table, Popconfirm, Modal, Typography } from "antd";
+import type { FormInstance } from "antd";
+import { FormOutlined, DeleteOutlined } from "@ant-design/icons";
 import { getCategoryList, deleteCategory, addCategory } from "../../apis/category";
 import dayjs from "dayjs";
 
@@ -85,7 +71,7 @@ export default class CategoryPage extends React.Component<{}, IState> {
       visible: false
     };
     this.formRef = React.createRef<FormInstance>();
-    this.addFormRef = React.createRef<FormInstance>()
+    this.addFormRef = React.createRef<FormInstance>();
   }
 
   async componentDidMount() {
@@ -106,12 +92,12 @@ export default class CategoryPage extends React.Component<{}, IState> {
       if (response.resultCode !== 0) throw new Error(response.errorMsg);
       this.setState({ dataSource: response.data });
     } catch (err) {
-      message.error('获取分类列表失败');
+      message.error("获取分类列表失败");
       console.log(err);
     } finally {
       this.setState({ loading: false });
     }
-  };
+  }
 
   /**
    * @desc 搜索表单提交
@@ -139,7 +125,7 @@ export default class CategoryPage extends React.Component<{}, IState> {
       if (response.resultCode !== 0) throw new Error(response.errorMsg);
       message.success("删除分类成功");
     } catch (err) {
-      message.error('删除分类失败');
+      message.error("删除分类失败");
       console.log(err);
     } finally {
       await this.fetchList(this.formRef.current?.getFieldsValue());
@@ -155,7 +141,7 @@ export default class CategoryPage extends React.Component<{}, IState> {
       if (response.resultCode !== 0) throw new Error(response.errorMsg);
       message.success("新增分类成功");
     } catch (err) {
-      message.error('新增分类失败');
+      message.error("新增分类失败");
       console.log(err);
     } finally {
       this.setState({ visible: false });
@@ -199,31 +185,24 @@ export default class CategoryPage extends React.Component<{}, IState> {
         <Button type="primary" onClick={() => this.setState({ visible: true })}>
           新增分类
         </Button>
-        <Table<CategoryModel>
-          size="small"
-          bordered
-          dataSource={this.state.dataSource}
-          loading={this.state.loading}
-          rowKey={record => record._id}
-        >
+        <Table<CategoryModel> size="small" bordered dataSource={this.state.dataSource} loading={this.state.loading} rowKey={record => record._id}>
           <Table.Column<CategoryModel> title="分类名" dataIndex="name" align="center" />
-          <Table.Column<CategoryModel>
-            title="分类创建时间"
-            dataIndex="createTime"
-            align="center"
-            render={scope => dayjs(scope).format("YYYY-MM-DD HH:mm:ss")}
-          />
+          <Table.Column<CategoryModel> title="分类创建时间" dataIndex="createTime" align="center" render={scope => dayjs(scope).format("YYYY-MM-DD HH:mm:ss")} />
           <Table.Column<CategoryModel>
             title="操作"
             align="center"
             render={(_, row) => (
               <React.Fragment>
-                <Button type="link" icon={<FormOutlined />}>编辑</Button>
+                <Button type="link" icon={<FormOutlined />}>
+                  编辑
+                </Button>
                 <Popconfirm
                   title={
                     <Space>
                       <Text>确定删除分类</Text>
-                      <Text type="danger" strong>{row.name}</Text>
+                      <Text type="danger" strong>
+                        {row.name}
+                      </Text>
                       <Text>吗?</Text>
                     </Space>
                   }
@@ -239,14 +218,8 @@ export default class CategoryPage extends React.Component<{}, IState> {
           />
         </Table>
         {/* 新增分类的表单弹窗 */}
-        <Modal
-          destroyOnClose
-          title="新增分类"
-          visible={this.state.visible}
-          onCancel={() => this.setState({ visible: false })}
-          footer={null}
-        >
-          <Form ref={this.addFormRef} {...addFormLayout} onFinish={(values) => this.onSubmit(values)}>
+        <Modal destroyOnClose title="新增分类" visible={this.state.visible} onCancel={() => this.setState({ visible: false })} footer={null}>
+          <Form ref={this.addFormRef} {...addFormLayout} onFinish={values => this.onSubmit(values)}>
             <Form.Item className="w-full" label="分类名称" name="name" rules={[{ required: true, message: "分类名称不能为空!" }]}>
               <Input placeholder="请输入分类名称" />
             </Form.Item>
