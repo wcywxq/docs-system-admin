@@ -1,15 +1,31 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
-import { Card, Form, Row, Col, Button, Space, message, Input, DatePicker, Table, Popconfirm, Modal } from "antd";
+import React from "react";
+import type { Key } from 'react';
+import {
+  Card,
+  Form,
+  Row,
+  Col,
+  Button,
+  Space,
+  message,
+  Input,
+  DatePicker,
+  Table,
+  Popconfirm,
+  Modal,
+  Typography
+} from "antd";
+import type { FormInstance } from 'antd';
+import { FormOutlined, DeleteOutlined } from '@ant-design/icons';
 import { getCategoryList, deleteCategory, addCategory } from "../../apis/category";
 import dayjs from "dayjs";
 
 export type CategoryModel = {
-  key: string;
+  _id: Key;
   name: string;
   createTime: Date;
 };
 
-const { useForm } = Form;
 const { RangePicker } = DatePicker;
 
 const formLayout = {
@@ -34,175 +50,217 @@ const addFormLayout = {
   }
 };
 
-const CategoryPage: FC = () => {
-  const [form] = useForm();
-  const [addForm] = useForm();
-  const [loading, setLoading] = useState(false);
-  const [dataSource, setDataSource] = useState<Array<CategoryModel>>([]);
-  const [visible, setVisible] = useState(false);
+const { Text } = Typography;
+
+type IState = {
+  loading: boolean;
+  dataSource: CategoryModel[];
+  visible: boolean;
+};
+
+type SearchFormType = Partial<{
+  name: string;
+  createTime: number[];
+}>;
+
+type QueryParamType = Partial<{
+  name: string;
+  createBeginTime: number;
+  createEndTime: number;
+}>;
+
+type AddFormType = Partial<{
+  name: string;
+}>;
+
+export default class CategoryPage extends React.Component<{}, IState> {
+  private readonly formRef: React.RefObject<FormInstance>;
+  private readonly addFormRef: React.RefObject<FormInstance>;
+
+  constructor(props: {} | Readonly<{}>) {
+    super(props);
+    this.state = {
+      loading: false,
+      dataSource: [],
+      visible: false
+    };
+    this.formRef = React.createRef<FormInstance>();
+    this.addFormRef = React.createRef<FormInstance>()
+  }
+
+  async componentDidMount() {
+    await this.fetchList(this.formRef.current?.getFieldsValue());
+  }
 
   /**
    * @desc 查询
    * @param params
    */
-  const fetchList = async (params?: any) => {
-    setLoading(true);
-    const query = {} as any;
-    params.name && (query.name = params.name);
-    params.createTime !== undefined && params.createTime.length && ([query.createBeginTime, query.createEndTime] = params.createTime.map((time: any) => dayjs(time).valueOf()));
+  async fetchList(params: SearchFormType) {
+    this.setState({ loading: true });
+    const query: QueryParamType = {};
+    query.name = params.name;
+    [query.createBeginTime, query.createEndTime] = params.createTime?.map(item => dayjs(item).valueOf()) || [];
     try {
       const response: any = await getCategoryList(query);
-      if (response.resultCode === 0) {
-        setDataSource(response.data.map((item: any) => ({ ...item, key: item._id })));
-      } else {
-        message.error(`获取分类列表失败: ${JSON.stringify(response.errorMsg)}`);
-      }
+      if (response.resultCode !== 0) throw new Error(response.errorMsg);
+      this.setState({ dataSource: response.data });
     } catch (err) {
-      message.error({ message: `获取分类列表失败: ${err}` });
+      message.error('获取分类列表失败');
+      console.log(err);
     } finally {
-      setLoading(false);
+      this.setState({ loading: false });
     }
   };
 
   /**
-   * @desc 查询
+   * @desc 搜索表单提交
+   * @param values
    */
-  const onSearch = (values: any) => {
-    fetchList(values);
-  };
+  async onSearch(values: SearchFormType) {
+    await this.fetchList(values);
+  }
 
   /**
-   * @desc 重置
+   * @desc 搜索表单重置
    */
-  const onReset = useCallback(() => {
-    form.resetFields();
-    fetchList(form.getFieldsValue());
-  }, [form]);
+  async onReset() {
+    this.formRef.current?.resetFields();
+    await this.fetchList(this.formRef.current?.getFieldsValue());
+  }
 
   /**
    * @desc 删除分类
-   * @param id 分类id
+   * @param id
    */
-  const handledeleteCategory = useCallback(
-    async (id: string) => {
-      try {
-        const response: any = await deleteCategory({ id });
-        if (response.resultCode !== 0) {
-          message.error(`删除分类失败: ${response.errorMsg.toString()}`);
-        }
-        message.success("删除分类成功");
-      } catch (err) {
-        message.error(err);
-      } finally {
-        fetchList(form.getFieldsValue());
-      }
-    },
-    [form]
-  );
+  async onDeleteCategory(id: Key) {
+    try {
+      const response: any = await deleteCategory({ id });
+      if (response.resultCode !== 0) throw new Error(response.errorMsg);
+      message.success("删除分类成功");
+    } catch (err) {
+      message.error('删除分类失败');
+      console.log(err);
+    } finally {
+      await this.fetchList(this.formRef.current?.getFieldsValue());
+    }
+  }
 
   /**
-   * @desc 新增分类的提交
+   * @desc 新增分类表单提交
    */
-  const onSubmit = useCallback(
-    async (values: any) => {
-      try {
-        const response: any = await addCategory(values);
-        if (response.resultCode !== 0) {
-          message.error(`新增分类失败: ${response.errorMsg.toString()}`);
-        }
-        message.success("新增分类成功");
-        setVisible(false);
-        // 表单重置
-        addForm.resetFields();
-        fetchList(form.getFieldsValue());
-      } catch (err) {
-        message.error(`新增分类失败: ${err}`);
-      }
-    },
-    [addForm, form]
-  );
+  async onSubmit(values: AddFormType) {
+    try {
+      const response: any = await addCategory(values);
+      if (response.resultCode !== 0) throw new Error(response.errorMsg);
+      message.success("新增分类成功");
+    } catch (err) {
+      message.error('新增分类失败');
+      console.log(err);
+    } finally {
+      this.setState({ visible: false });
+      // 表单重置
+      this.addFormRef.current?.resetFields();
+      await this.fetchList(this.formRef.current?.getFieldsValue());
+    }
+  }
 
-  useEffect(() => {
-    fetchList(form.getFieldsValue());
-  }, [form]);
-
-  return (
-    <Space className="w-full" direction="vertical" size="large">
-      <Card>
-        <Form {...formLayout} form={form} layout="horizontal" onFinish={onSearch}>
-          <Row justify="space-between" gutter={[8, 0]}>
-            <Col span={8}>
-              <Form.Item className="w-full" label="分类名称" name="name">
-                <Input placeholder="请输入分类名称" />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item className="w-full" label="创建时间" name="createTime">
-                <RangePicker className="w-full" showTime />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item className="w-full text-center">
-                <Space>
-                  <Button type="primary" htmlType="submit">
-                    查询
+  render() {
+    return (
+      <Space className="w-full" direction="vertical" size="large">
+        <Card>
+          <Form {...formLayout} ref={this.formRef} layout="horizontal" onFinish={values => this.onSearch(values)}>
+            <Row justify="space-between" gutter={[8, 0]}>
+              <Col span={8}>
+                <Form.Item className="w-full" label="分类名称" name="name">
+                  <Input placeholder="请输入分类名称" />
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item className="w-full" label="创建时间" name="createTime">
+                  <RangePicker className="w-full" showTime />
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item className="w-full text-center">
+                  <Space>
+                    <Button type="primary" htmlType="submit">
+                      查询
+                    </Button>
+                    <Button htmlType="button" onClick={() => this.onReset()}>
+                      重置
+                    </Button>
+                  </Space>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Card>
+        <Button type="primary" onClick={() => this.setState({ visible: true })}>
+          新增分类
+        </Button>
+        <Table<CategoryModel>
+          size="small"
+          bordered
+          dataSource={this.state.dataSource}
+          loading={this.state.loading}
+          rowKey={record => record._id}
+        >
+          <Table.Column<CategoryModel> title="分类名" dataIndex="name" align="center" />
+          <Table.Column<CategoryModel>
+            title="分类创建时间"
+            dataIndex="createTime"
+            align="center"
+            render={scope => dayjs(scope).format("YYYY-MM-DD HH:mm:ss")}
+          />
+          <Table.Column<CategoryModel>
+            title="操作"
+            align="center"
+            render={(_, row) => (
+              <React.Fragment>
+                <Button type="link" icon={<FormOutlined />}>编辑</Button>
+                <Popconfirm
+                  title={
+                    <Space>
+                      <Text>确定删除分类</Text>
+                      <Text type="danger" strong>{row.name}</Text>
+                      <Text>吗?</Text>
+                    </Space>
+                  }
+                  okText="确定"
+                  cancelText="取消"
+                  onConfirm={() => this.onDeleteCategory(row._id)}>
+                  <Button danger type="link" icon={<DeleteOutlined />}>
+                    删除
                   </Button>
-                  <Button htmlType="button" onClick={onReset}>
-                    重置
-                  </Button>
-                </Space>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Card>
-      <Button type="primary" onClick={() => setVisible(true)}>
-        新增分类
-      </Button>
-      <Table<CategoryModel> bordered dataSource={dataSource} loading={loading} rowKey={record => record.key}>
-        <Table.Column<CategoryModel> title="分类名" dataIndex="name" align="center" />
-        <Table.Column<CategoryModel> title="分类创建时间" dataIndex="createTime" align="center" render={scope => dayjs(scope).format("YYYY-MM-DD HH:mm:ss")} />
-        <Table.Column<CategoryModel>
-          title="操作"
-          align="center"
-          render={(_, row) => (
-            <Space>
-              <Button type="primary">编辑</Button>
-              <Popconfirm
-                title={
-                  <span>
-                    确定删除分类<span className="text-danger font-bold">{row.name}</span>吗?
-                  </span>
-                }
-                okText="确定"
-                cancelText="取消"
-                onConfirm={() => handledeleteCategory(row.key)}>
-                <Button danger type="primary">
-                  删除
+                </Popconfirm>
+              </React.Fragment>
+            )}
+          />
+        </Table>
+        {/* 新增分类的表单弹窗 */}
+        <Modal
+          destroyOnClose
+          title="新增分类"
+          visible={this.state.visible}
+          onCancel={() => this.setState({ visible: false })}
+          footer={null}
+        >
+          <Form ref={this.addFormRef} {...addFormLayout} onFinish={(values) => this.onSubmit(values)}>
+            <Form.Item className="w-full" label="分类名称" name="name" rules={[{ required: true, message: "分类名称不能为空!" }]}>
+              <Input placeholder="请输入分类名称" />
+            </Form.Item>
+            <Row align="middle" justify="end">
+              <Space>
+                <Button onClick={() => this.setState({ visible: false })}>取消</Button>
+                <Button type="primary" htmlType="submit">
+                  提交
                 </Button>
-              </Popconfirm>
-            </Space>
-          )}
-        />
-      </Table>
-      {/* 新增分类的表单弹窗 */}
-      <Modal destroyOnClose title="新增分类" visible={visible} onCancel={() => setVisible(false)} footer={null}>
-        <Form form={addForm} {...addFormLayout} onFinish={onSubmit}>
-          <Form.Item className="w-full" label="分类名称" name="name" rules={[{ required: true, message: "分类名称不能为空!" }]}>
-            <Input placeholder="请输入分类名称" />
-          </Form.Item>
-          <Row align="middle" justify="end">
-            <Space>
-              <Button onClick={() => setVisible(false)}>取消</Button>
-              <Button type="primary" htmlType="submit">
-                提交
-              </Button>
-            </Space>
-          </Row>
-        </Form>
-      </Modal>
-    </Space>
-  );
-};
-
-export default CategoryPage;
+              </Space>
+            </Row>
+          </Form>
+        </Modal>
+      </Space>
+    );
+  }
+}

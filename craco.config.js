@@ -13,10 +13,10 @@ module.exports = {
         options: {
             customizeTheme: {
                 "@primary-color": "#215fff",
-                "@border-radius-base": "6px"
+                "@border-radius-base": "4px"
             }
         }
-    }
+    },
   ],
   webpack: {
     plugins: [new AntdDayjsWebpackPlugin()],

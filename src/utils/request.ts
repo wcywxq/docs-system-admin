@@ -42,8 +42,6 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response: AxiosResponse) => {
     const { resultCode, errorMsg } = response.data;
-    // const dispatch = useDispatch();
-
     // 0 => 请求成功
     if (resultCode === 0) {
       console.log(response.data);
@@ -78,8 +76,6 @@ request.interceptors.response.use(
     };
     const { response } = err;
     const status = response.status as keyof ErrResponseMap | undefined;
-
-    // const status = response.status as
     if (status) {
       throw new Error(errResponseMap[status] ?? "");
     }
