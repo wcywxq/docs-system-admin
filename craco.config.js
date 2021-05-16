@@ -12,7 +12,8 @@ module.exports = {
     alias: {
       "@": path.resolve(__dirname, "./src"),
       "@@": path.resolve(__dirname, "./src/Hoc")
-    }
+    },
+    plugins: [new AntdDayjsWebpackPlugin()]
   },
   babel: {
     plugins: [["@babel/plugin-proposal-decorators", { legacy: true }]]
@@ -28,9 +29,6 @@ module.exports = {
       }
     }
   ],
-  webpack: {
-    plugins: [new AntdDayjsWebpackPlugin()]
-  },
   devServer: {
     historyApiFallback: true,
     proxy: {

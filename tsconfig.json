@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "lib": ["esnext", "dom"],
+    "lib": [
+      "esnext",
+      "dom"
+    ],
     "jsx": "react-jsx",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
@@ -17,12 +20,28 @@
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "isolatedModules": true,
-    "noEmit": true,
-    "paths": {
-      "@/*": ["./src/*"],
-      "@@/*": ["./src/Hoc/*"]
-    }
+    "noEmit": true
   },
-  "include": ["mock/**/*", "src/**/*", "tests/**/*", "test/**/*", "__test__/**/*", "typings/**/*", "config/**/*", ".eslintrc.js", ".stylelintrc.js", ".prettierrc.js", "jest.config.js", "mock/*"],
-  "exclude": ["node_modules", "build", "dist", "scripts", "webpack", "jest"]
+  "include": [
+    "mock/**/*",
+    "src/**/*",
+    "tests/**/*",
+    "test/**/*",
+    "__test__/**/*",
+    "typings/**/*",
+    "config/**/*",
+    ".eslintrc.js",
+    ".stylelintrc.js",
+    ".prettierrc.js",
+    "jest.config.js",
+    "mock/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "scripts",
+    "webpack",
+    "jest"
+  ]
 }
