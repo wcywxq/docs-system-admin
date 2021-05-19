@@ -1,12 +1,17 @@
-import React, { FC, Fragment } from "react";
+import React from "react";
 import Editor from "@/components/Editor";
 
-const FriendShipPage: FC = () => {
-  return (
-    <Fragment>
-      <Editor />
-    </Fragment>
-  );
-};
+export default class FriendShipPage extends React.Component<{}, { value: string }> {
+  constructor(props: {} | Readonly<{}>) {
+    super(props);
+    this.state = { value: "" };
+  }
 
-export default FriendShipPage;
+  onChange(value: string) {
+    this.setState({ value });
+  }
+
+  render() {
+    return <Editor value={this.state.value} onChange={value => this.onChange(value)} />;
+  }
+}

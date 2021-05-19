@@ -1,5 +1,5 @@
 import React from "react";
-import { Dropdown, Menu, Space, Tooltip } from "antd";
+import { Col, Dropdown, Menu, Row, Space, Tooltip } from "antd";
 import {
   AlignLeftOutlined,
   BgColorsOutlined,
@@ -8,7 +8,7 @@ import {
   CodeOutlined,
   createFromIconfontCN,
   DashOutlined,
-  DownOutlined,
+  EyeOutlined,
   FontColorsOutlined,
   FontSizeOutlined,
   FullscreenOutlined,
@@ -28,29 +28,43 @@ import {
   YoutubeOutlined
 } from "@ant-design/icons";
 import "./index.scss";
-
-type IState = {
-  content: string;
-};
+import RenderMarkdown from "./RenderMarkdown";
 
 const IconFont = createFromIconfontCN({
   scriptUrl: ["//at.alicdn.com/t/font_2557198_m7pymcbur7.js"]
 });
 
-export default class Editor extends React.Component<{}, IState> {
-  constructor(props: {} | Readonly<{}>) {
+type IProps = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+type IState = {
+  content: string;
+  isPreview: boolean;
+};
+export default class Editor extends React.PureComponent<IProps, IState> {
+  constructor(props: IProps | Readonly<IProps>) {
     super(props);
     this.state = {
-      content: ""
+      content: "",
+      isPreview: false
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<IState>) {
-    console.log(prevState.content, this.state.content);
+  shouldComponentUpdate(nextProps: Readonly<IProps>, nextState: Readonly<IState>) {
+    return nextProps.value !== this.state.content || nextState.content !== this.state.content;
   }
 
-  onChange(e: any) {
-    this.setState({ content: e.target.innerText });
+  onChange(value: string) {
+    this.setState({ content: value });
+    this.props.onChange(this.state.content);
+  }
+
+  onPreview() {
+    this.setState({
+      isPreview: !this.state.isPreview
+    });
   }
 
   render() {
@@ -200,14 +214,28 @@ export default class Editor extends React.Component<{}, IState> {
               <Tooltip title="恢复">
                 <RedoOutlined className="editor-toolbar-controls" />
               </Tooltip>
+              <Tooltip title="预览">
+                <EyeOutlined className="editor-toolbar-controls" onClick={() => this.onPreview()} />
+              </Tooltip>
               <Tooltip title="全屏">
                 <FullscreenOutlined className="editor-toolbar-controls" />
               </Tooltip>
             </Space>
           </div>
-          <div className="editor-content" contentEditable={true} placeholder="请输入文章内容，支持 markdown 格式" onInput={e => this.onChange(e)}></div>
+          <Row>
+            <Col
+              span={12}
+              className="editor-content"
+              contentEditable={true}
+              placeholder="请输入文章内容，支持 markdown 格式"
+              onInput={e => this.onChange((e.target as HTMLDivElement).innerText)}
+              onBlur={e => this.onChange((e.target as HTMLDivElement).innerText)}
+            />
+            <Col span={12} className="editor-preview">
+              <RenderMarkdown content={this.state.content} />
+            </Col>
+          </Row>
         </div>
-        {this.state.content}
       </>
     );
   }

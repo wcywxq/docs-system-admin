@@ -36,10 +36,15 @@
   outline: none;
   padding: 4px 11px;
   overflow: auto;
-  height: 20rem;
+  height: 40rem;
+  border-right: 1px solid #d9d9d9;
 
   &:empty::before {
     color: #d9d9d9;
     content: attr(placeholder);
   }
+}
+
+.editor-preview {
+  overflow: auto;
 }
