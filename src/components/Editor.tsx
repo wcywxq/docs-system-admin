@@ -224,15 +224,15 @@ export default class Editor extends React.PureComponent<IProps, IState> {
           </div>
           <Row>
             <Col
-              span={12}
+              span={8}
               className="editor-content"
               contentEditable={true}
               placeholder="请输入文章内容，支持 markdown 格式"
               onInput={e => this.onChange((e.target as HTMLDivElement).innerText)}
               onBlur={e => this.onChange((e.target as HTMLDivElement).innerText)}
             />
-            <Col span={12} className="editor-preview">
-              <RenderMarkdown content={this.state.content} />
+            <Col span={16} className="editor-preview">
+              <RenderMarkdown content={this.state.content} style={{ padding: 0, overflow: "auto", height: "40rem" }} />
             </Col>
           </Row>
         </div>

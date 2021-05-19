@@ -6,10 +6,11 @@ import TocLink from "./TocLink";
 
 type TProps = {
   content: string;
+  style?: React.CSSProperties;
 };
 
 const RenderMarkdown: React.FC<TProps> = props => {
-  const { content } = props;
+  const { content, style } = props;
 
   const tocLink = new TocLink();
   const renderer = new marked.Renderer();
@@ -37,7 +38,7 @@ const RenderMarkdown: React.FC<TProps> = props => {
   return (
     <Row gutter={[16, 0]}>
       <Col span={20}>
-        <p className="markdown" dangerouslySetInnerHTML={{ __html: marked(content) }}></p>
+        <p className="markdown" style={style} dangerouslySetInnerHTML={{ __html: marked(content) }}></p>
       </Col>
       <Col span={4}>
         <div>{tocLink && tocLink.render()}</div>
